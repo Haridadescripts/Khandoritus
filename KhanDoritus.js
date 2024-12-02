@@ -420,12 +420,25 @@ function setupMain(){
         while (true) {
             if(features.autoAnswer&&features.questionSpoof){
                 const classToCheck = [...baseClasses];
-                if (features.nextRecomendation) { device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); }
-                if (features.repeatQuestion) classToCheck.push("_1abyu0ga");
+                if (features.nextRecomendation) { 
+                    device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); 
+                }
+                if (features.repeatQuestion) {
+                    classToCheck.push("_1abyu0ga");
+                    // After clicking repeat question, uncheck the checkbox
+                    const repeatCheckbox = document.querySelector('[setting-data="features.repeatQuestion"]');
+                    if (repeatCheckbox) {
+                        repeatCheckbox.checked = false;
+                        features.repeatQuestion = false;
+                    }
+                }
                 classToCheck.forEach(async (q) => {
                     findAndClickByClass(q);
                     const element = document.getElementsByClassName(q)[0];
-                    if(element&&element.textContent=='Mostrar resumo') { sendToast("🎉 Exercício concluido!", 3000); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); }
+                    if(element&&element.textContent=='Mostrar resumo') { 
+                        sendToast("🌶️ Doritus crunch complete!", 3000); 
+                        playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); 
+                    }
                 });
             }
             await delay(featureConfigs.autoAnswerDelay*750);
