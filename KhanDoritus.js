@@ -148,11 +148,13 @@ function setupMenu() {
             left: '85%', 
             width: '60px', 
             height: '60px', 
-            backgroundImage: 'url("data:image/png;base64,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")',
-            backgroundSize: 'cover',
-            cursor: 'default', 
+            backgroundImage: 'url("https://logosmarcas.net/wp-content/uploads/2021/06/Doritos-Logo.png")',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundColor: 'transparent',
+            cursor: 'pointer', 
             userSelect: 'none', 
-            borderRadius: '50%',
             zIndex: '1001', 
             transition: 'transform 0.3s ease'
         });
@@ -160,8 +162,25 @@ function setupMenu() {
         if (device.mobile) watermark.style.left = '55%';
         document.body.appendChild(watermark);
         
+        // Add hover effect
+        watermark.addEventListener('mouseenter', () => {
+            watermark.style.transform = 'scale(1.1)';
+        });
+        
+        watermark.addEventListener('mouseleave', () => {
+            watermark.style.transform = 'scale(1)';
+        });
+
         let isDragging = false, offsetX, offsetY;
-        watermark.addEventListener('mousedown', e => { if (!dropdownMenu.contains(e.target)) { isDragging = true; offsetX = e.clientX - watermark.offsetLeft; offsetY = e.clientY - watermark.offsetTop; watermark.style.transform = 'scale(0.9)'; unloader.style.transform = 'scale(1)'; } });
+        watermark.addEventListener('mousedown', e => { 
+            if (!dropdownMenu.contains(e.target)) { 
+                isDragging = true; 
+                offsetX = e.clientX - watermark.offsetLeft; 
+                offsetY = e.clientY - watermark.offsetTop; 
+                watermark.style.transform = 'scale(0.9)'; 
+                unloader.style.transform = 'scale(1)'; 
+            } 
+        });
         watermark.addEventListener('mouseup', () => { isDragging = false; watermark.style.transform = 'scale(1)'; unloader.style.transform = 'scale(0)'; if (checkCollision(watermark.getBoundingClientRect(), unloader.getBoundingClientRect())) unload(); });
         document.addEventListener('mousemove', e => { if (isDragging) { let newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - watermark.offsetWidth)); let newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - watermark.offsetHeight)); Object.assign(watermark.style, { left: `${newX}px`, top: `${newY}px` }); dropdownMenu.style.display = 'none'; } });
     }
