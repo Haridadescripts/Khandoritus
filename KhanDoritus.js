@@ -71,7 +71,7 @@ async function showSplashScreen() {
     splashScreen.innerHTML = '<span style="color:white;">KHAN</span><span style="color:#FFA500;">DORITUS</span>'; 
     document.body.appendChild(splashScreen); 
     setTimeout(() => splashScreen.style.opacity = '1', 10);
-}
+};
 async function hideSplashScreen() { splashScreen.style.opacity = '0'; setTimeout(() => splashScreen.remove(), 1000); };
 
 async function loadScript(url, label) { return fetch(url).then(response => response.text()).then(script => { loadedPlugins.push(label); eval(script); }); }
@@ -146,47 +146,22 @@ function setupMenu() {
             position: 'fixed', 
             top: '0', 
             left: '85%', 
-            width: '50px',  
-            height: '50px', 
-            backgroundColor: 'transparent',
+            width: '60px', 
+            height: '60px', 
+            backgroundImage: 'url("data:image/png;base64,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")',
+            backgroundSize: 'cover',
             cursor: 'default', 
             userSelect: 'none', 
+            borderRadius: '50%',
             zIndex: '1001', 
             transition: 'transform 0.3s ease'
         });
-        if (device.mobile) watermark.style.left = '55%'
         
-        // Usando SVG do Doritos como ícone
-        watermark.innerHTML = `
-            <svg viewBox="0 0 24 24" style="width:100%;height:100%;fill:#FF4500;">
-                <path d="M12 2L2 22h20L12 2zm-1 15l-3-3 3-3 3 3-3 3zm2-7l3-3 3 3-3 3-3-3zm-4 0l-3 3-3-3 3-3 3 3z"/>
-            </svg>
-        `;
-        
+        if (device.mobile) watermark.style.left = '55%';
         document.body.appendChild(watermark);
         
-        // Adicionar efeito hover
-        watermark.addEventListener('mouseenter', () => {
-            watermark.style.filter = 'brightness(1.2)';
-            watermark.style.transform = 'scale(1.1)';
-        });
-        
-        watermark.addEventListener('mouseleave', () => {
-            watermark.style.filter = 'none';
-            watermark.style.transform = 'scale(1)';
-        });
-
-        // Resto do código do watermark permanece o mesmo
         let isDragging = false, offsetX, offsetY;
-        watermark.addEventListener('mousedown', e => { 
-            if (!dropdownMenu.contains(e.target)) { 
-                isDragging = true; 
-                offsetX = e.clientX - watermark.offsetLeft; 
-                offsetY = e.clientY - watermark.offsetTop; 
-                watermark.style.transform = 'scale(0.9)'; 
-                unloader.style.transform = 'scale(1)'; 
-            } 
-        });
+        watermark.addEventListener('mousedown', e => { if (!dropdownMenu.contains(e.target)) { isDragging = true; offsetX = e.clientX - watermark.offsetLeft; offsetY = e.clientY - watermark.offsetTop; watermark.style.transform = 'scale(0.9)'; unloader.style.transform = 'scale(1)'; } });
         watermark.addEventListener('mouseup', () => { isDragging = false; watermark.style.transform = 'scale(1)'; unloader.style.transform = 'scale(0)'; if (checkCollision(watermark.getBoundingClientRect(), unloader.getBoundingClientRect())) unload(); });
         document.addEventListener('mousemove', e => { if (isDragging) { let newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - watermark.offsetWidth)); let newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - watermark.offsetHeight)); Object.assign(watermark.style, { left: `${newX}px`, top: `${newY}px` }); dropdownMenu.style.display = 'none'; } });
     }
@@ -237,7 +212,14 @@ function setupMenu() {
         }
         handleInput('autoAnswer', checked => checked && !features.questionSpoof && (document.querySelector('[setting-data="features.questionSpoof"]').checked = features.questionSpoof = true));
         handleInput('autoAnswerDelay', value => value && (featureConfigs.autoAnswerDelay = 4 - value));
-        handleInput('darkMode', checked => checked ? (DarkReader.setFetchMethod(window.fetch), DarkReader.enable()) : DarkReader.disable());
+        handleInput('darkMode', checked => {
+            if (checked) {
+                setupDoritosBackground();
+            } else {
+                const existingStyle = document.querySelector('style');
+                if (existingStyle) existingStyle.remove();
+            }
+        });
         handleInput('onekoJs', checked => { onekoEl = document.getElementById('oneko'); if (onekoEl) {onekoEl.style.display = checked ? null : "none"} });
         watermark.addEventListener('mouseenter', () => { dropdownMenu.style.display = 'flex'; playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav'); } );
         watermark.addEventListener('mouseleave', e => { !watermark.contains(e.relatedTarget) && (dropdownMenu.style.display = 'none'); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/rqizlm03.wav'); });
@@ -287,11 +269,6 @@ function setupMenu() {
 /* Main Functions */ 
 function setupMain(){
     function spoofQuestion() {
-        const phrases = [ 
-            "🔥 Get crunchy with Khan Doritus!", 
-            "🌶️ Spicy like Doritos!", 
-            "🧀 Cheesy good learning!"
-        ];
         const originalFetch = window.fetch;
         window.fetch = async function (input, init) {
             let body;
@@ -304,34 +281,14 @@ function setupMain(){
                 let responseObj = JSON.parse(responseBody);
                 if (features.questionSpoof && responseObj?.data?.assessmentItem?.item?.itemData) {
                     let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
-                    // Hide original question content
-                    document.querySelectorAll('.perseus-renderer').forEach(el => el.style.display = 'none');
-                    
-                    // Create simplified spoof question
-                    itemData.answerArea = { 
-                        "calculator": false, 
-                        "chi2Table": false, 
-                        "periodicTable": false, 
-                        "tTable": false, 
-                        "zTable": false 
+                    if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
+                        itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
+                        itemData.question.content = "🔥 Pegue um Doritos! [[☃ radio 1]]";
+                        itemData.question.widgets = { "radio 1": { options: { choices: [ { content: "Pegar Doritos", correct: true }, { content: "Não pegar Doritos", correct: false } ] } } };
+                        responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
+                        sendToast("🔓 Doritos liberado!", 1000);
+                        return new Response(JSON.stringify(responseObj), { status: originalResponse.status, statusText: originalResponse.statusText, headers: originalResponse.headers });
                     }
-                    itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
-                    itemData.question.widgets = { 
-                        "radio 1": { 
-                            options: { 
-                                choices: [
-                                    { content: "Continue", correct: true }
-                                ] 
-                            } 
-                        } 
-                    };
-                    responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                    sendToast("🌶️ Doritus Power Activated!", 1000);
-                    return new Response(JSON.stringify(responseObj), { 
-                        status: originalResponse.status, 
-                        statusText: originalResponse.statusText, 
-                        headers: originalResponse.headers 
-                    });
                 }
             } catch (e) { }
             return originalResponse;
@@ -447,25 +404,12 @@ function setupMain(){
         while (true) {
             if(features.autoAnswer&&features.questionSpoof){
                 const classToCheck = [...baseClasses];
-                if (features.nextRecomendation) { 
-                    device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); 
-                }
-                if (features.repeatQuestion) {
-                    classToCheck.push("_1abyu0ga");
-                    // After clicking repeat question, uncheck the checkbox
-                    const repeatCheckbox = document.querySelector('[setting-data="features.repeatQuestion"]');
-                    if (repeatCheckbox) {
-                        repeatCheckbox.checked = false;
-                        features.repeatQuestion = false;
-                    }
-                }
+                if (features.nextRecomendation) { device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); }
+                if (features.repeatQuestion) classToCheck.push("_1abyu0ga");
                 classToCheck.forEach(async (q) => {
                     findAndClickByClass(q);
                     const element = document.getElementsByClassName(q)[0];
-                    if(element&&element.textContent=='Mostrar resumo') { 
-                        sendToast("🌶️ Doritus crunch complete!", 3000); 
-                        playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); 
-                    }
+                    if(element&&element.textContent=='Mostrar resumo') { sendToast("🎉 Exercício concluido!", 3000); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); }
                 });
             }
             await delay(featureConfigs.autoAnswerDelay*750);
