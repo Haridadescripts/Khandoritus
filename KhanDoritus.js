@@ -161,106 +161,102 @@ function setupMenu() {
             position: 'fixed',
             bottom: '20px',
             right: '20px',
-            width: '50px',
-            height: '50px',
-            backgroundColor: '#FF4500', // Laranja Doritos
+            width: '60px',
+            height: '60px',
+            backgroundImage: 'url("data:image/png;base64,YOUR_DORITOS_LOGO_BASE64")', // Substituir pelo base64 do logo Doritos
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundColor: '#FF4500',
             borderRadius: '50%',
             cursor: 'pointer',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            boxShadow: '0 2px 5px rgba(255, 69, 0, 0.4)', // Sombra laranja
+            boxShadow: '0 2px 5px rgba(255, 69, 0, 0.4)',
             zIndex: '1002',
             transition: 'all 0.3s ease'
         });
 
-        // Ajustar o estilo do menu dropdown
+        document.body.appendChild(menuButton);
+
+        // Configurar o menu dropdown
         Object.assign(dropdownMenu.style, {
             position: 'absolute',
-            top: '100%',
-            right: '0',
-            width: '160px',
-            backgroundColor: 'rgba(255, 69, 0, 0.95)', // Fundo laranja semi-transparente
-            borderRadius: '10px',
-            color: 'white',
-            fontSize: '13px',
-            fontFamily: 'MuseoSans, sans-serif',
-            display: 'none',
-            flexDirection: 'column',
-            zIndex: '1000',
-            padding: '10px',
-            cursor: 'default',
-            userSelect: 'none',
-            transition: 'transform 0.3s ease',
-            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.3)', // Sombra laranja suave
-            border: '2px solid #FF5722' // Borda laranja mais escura
+            top: 'auto',
+            bottom: '70px',
+            right: '20px',
+            width: '200px',
+            backgroundColor: 'rgba(255, 69, 0, 0.95)',
+            display: 'none'
+            // ... resto dos estilos do menu permanecem iguais
         });
 
-        // Atualizar os estilos dos inputs no menu
-        const menuStyles = `
-            <style>
-                input[type="checkbox"] {
-                    appearance: none;
-                    width: 15px;
-                    height: 15px;
-                    background-color: rgba(255, 255, 255, 0.1);
-                    border: 2px solid #FFA500;
-                    border-radius: 3px;
-                    margin-right: 5px;
-                    cursor: pointer;
-                }
-                input[type="checkbox"]:checked {
-                    background-color: #FFA500;
-                    border-color: #FF8C00;
-                }
-                input[type="text"], input[type="number"], input[type="range"] {
-                    width: calc(100% - 10px);
-                    border: 1px solid #FF8C00;
-                    color: white;
-                    accent-color: #FFA500;
-                    background: rgba(255, 255, 255, 0.1);
-                    padding: 5px;
-                    border-radius: 3px;
-                }
-                label {
-                    display: flex;
-                    align-items: center;
-                    color: white;
-                    padding: 5px 0;
-                    transition: all 0.2s ease;
-                }
-                label:hover {
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 5px;
-                    padding-left: 5px;
-                }
-            </style>
-        `;
-        dropdownMenu.innerHTML = menuStyles + dropdownMenu.innerHTML;
+        document.body.appendChild(dropdownMenu);
 
-        // Resto do código permanece o mesmo...
-        // Apenas atualize as cores dos efeitos hover e click
+        // Adicionar eventos ao botão
+        let menuOpen = false;
+        menuButton.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            dropdownMenu.style.display = menuOpen ? 'flex' : 'none';
+            menuButton.style.transform = menuOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+            playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav');
+        });
+
+        // Efeitos hover
         menuButton.addEventListener('mouseenter', () => {
-            menuButton.style.transform = 'scale(1.1)';
-            menuButton.style.backgroundColor = '#FF5722'; // Laranja mais escuro no hover
+            menuButton.style.transform = menuOpen ? 'rotate(180deg) scale(1.1)' : 'scale(1.1)';
+            menuButton.style.backgroundColor = '#FF5722';
         });
 
         menuButton.addEventListener('mouseleave', () => {
-            if (!menuOpen) {
-                menuButton.style.transform = 'scale(1)';
-                menuButton.style.backgroundColor = '#FF4500';
-            }
-        });
-
-        menuButton.addEventListener('mousedown', () => {
-            menuButton.style.backgroundColor = '#FF6347'; // Cor de clique
-        });
-
-        menuButton.addEventListener('mouseup', () => {
+            menuButton.style.transform = menuOpen ? 'rotate(180deg)' : 'scale(1)';
             menuButton.style.backgroundColor = '#FF4500';
         });
 
-        // O resto do código continua igual...
+        // Fechar menu ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target) && menuOpen) {
+                menuOpen = false;
+                dropdownMenu.style.display = 'none';
+                menuButton.style.transform = 'rotate(0deg)';
+                playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/rqizlm03.wav');
+            }
+        });
+
+        // Permitir arrastar o botão
+        let isDragging = false, offsetX, offsetY;
+        menuButton.addEventListener('mousedown', e => {
+            if (e.button === 0) { // Apenas botão esquerdo do mouse
+                isDragging = true;
+                offsetX = e.clientX - menuButton.offsetLeft;
+                offsetY = e.clientY - menuButton.offsetTop;
+                menuButton.style.transition = 'none';
+            }
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (isDragging) {
+                const newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - menuButton.offsetWidth));
+                const newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - menuButton.offsetHeight));
+                
+                menuButton.style.left = `${newX}px`;
+                menuButton.style.top = `${newY}px`;
+                
+                // Mover o menu junto com o botão
+                if (menuOpen) {
+                    dropdownMenu.style.left = `${newX}px`;
+                    dropdownMenu.style.top = `${newY + menuButton.offsetHeight + 10}px`;
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                menuButton.style.transition = 'all 0.3s ease';
+            }
+        });
+
+        // Remover eventos antigos do watermark já que agora usamos o botão
+        watermark.remove();
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
