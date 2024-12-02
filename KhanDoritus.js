@@ -251,19 +251,63 @@ function setupMenu() {
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
-            position: 'absolute', top: '100%', left: '0', width: '160px', backgroundColor: 'rgba(0,0,0,0.3)',
-            borderRadius: '10px', color: 'white', fontSize: '13px', fontFamily: 'Monospace, sans-serif',
-            display: 'none', flexDirection: 'column', zIndex: '1000', padding: '5px', cursor: 'default',
-            userSelect: 'none', transition: 'transform 0.3s ease', backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)'
+            position: 'absolute', 
+            top: '100%', 
+            left: '0', 
+            width: '160px', 
+            backgroundColor: 'rgba(255, 69, 0, 0.95)', // Fundo laranja semi-transparente
+            borderRadius: '10px', 
+            color: 'white', 
+            fontSize: '13px', 
+            fontFamily: 'MuseoSans, sans-serif',
+            display: 'none', 
+            flexDirection: 'column', 
+            zIndex: '1000', 
+            padding: '10px', 
+            cursor: 'default',
+            userSelect: 'none', 
+            transition: 'transform 0.3s ease',
+            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.3)', // Sombra laranja
+            border: '2px solid #FF5722' // Borda laranja mais escura
         });
+
         dropdownMenu.innerHTML = `
             <style>
-                input[type="checkbox"] {appearance: none; width: 15px; height: 15px; background-color: #3a3a3b;
-                border: 1px solid #acacac; border-radius: 3px; margin-right: 5px; cursor: pointer;}
-                input[type="checkbox"]:checked {background-color: #540b8a; border-color: #720fb8;}
-                input[type="text"], input[type="number"], input[type="range"] {width: calc(100% - 10px); border: 1px solid #343434; 
-                color: white; accent-color: #540b8a; background-color: #540b8a; padding: 3px; border-radius: 3px; background: none;}
-                label {display: flex; align-items: center; color: #3a3a3b; padding-top: 3px;}
+                input[type="checkbox"] {
+                    appearance: none; 
+                    width: 15px; 
+                    height: 15px; 
+                    background-color: rgba(255, 255, 255, 0.1);
+                    border: 2px solid #FFA500; 
+                    border-radius: 3px; 
+                    margin-right: 5px; 
+                    cursor: pointer;
+                }
+                input[type="checkbox"]:checked {
+                    background-color: #FFA500;
+                    border-color: #FF8C00;
+                }
+                input[type="text"], input[type="number"], input[type="range"] {
+                    width: calc(100% - 10px); 
+                    border: 1px solid #FF8C00;
+                    color: white; 
+                    accent-color: #FFA500;
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 5px;
+                    border-radius: 3px;
+                }
+                label {
+                    display: flex; 
+                    align-items: center; 
+                    color: white; 
+                    padding: 5px 0;
+                    transition: all 0.2s ease;
+                }
+                label:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 5px;
+                    padding-left: 5px;
+                }
             </style>
         `;
         watermark.appendChild(dropdownMenu);
