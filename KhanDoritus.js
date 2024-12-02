@@ -419,19 +419,16 @@ function setupMain(){
         }, 3000);
     }
     async function autoAnswer() {
-        const correctAnswerSelector = '._yxmlvoe.perseus-radio-option';
+        const targetButtonSelector = '._rz7ls7u';
         const nextButtonSelector = 'button._1f0fvyce[aria-disabled="false"]';
         
         while (true) {
             if(features.autoAnswer && features.questionSpoof) {
-                // Procura e clica na resposta correta
-                const allAnswers = document.querySelectorAll(correctAnswerSelector);
-                const correctAnswer = Array.from(allAnswers)
-                    .find(answer => answer.textContent.trim() === "Resposta correta");
-                    
-                if(correctAnswer) {
-                    correctAnswer.click();
-                    sendToast("✅ Resposta selecionada", 1000);
+                // Clica no botão com a classe _rz7ls7u
+                const targetButton = document.querySelector(targetButtonSelector);
+                if(targetButton) {
+                    targetButton.click();
+                    sendToast("🔘 Botão pressionado", 1000);
                     await delay(500);
                 }
 
