@@ -285,7 +285,7 @@ function setupMain(){
                     let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
                     if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
                         itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
-                        itemData.question.content = "Selecione a resposta correta" + `[[�� radio 1]]`;
+                        itemData.question.content = "Selecione a resposta correta" + `[[ radio 1]]`;
                         itemData.question.widgets = { 
                             "radio 1": { 
                                 options: { 
