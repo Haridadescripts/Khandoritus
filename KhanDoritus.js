@@ -173,8 +173,9 @@ function setupMenu() {
         
         document.body.appendChild(watermark);
         
-        // Remover eventos de hover e substituir por click
+        // Remover completamente os eventos de hover do watermark
         watermark.addEventListener('click', (e) => {
+            e.stopPropagation(); // Previne que o click se propague para o document
             if (!dropdownMenu.contains(e.target)) {
                 const isVisible = dropdownMenu.style.display === 'flex';
                 dropdownMenu.style.display = isVisible ? 'none' : 'flex';
@@ -193,7 +194,7 @@ function setupMenu() {
 
         // Fechar menu ao clicar fora
         document.addEventListener('click', (e) => {
-            if (!watermark.contains(e.target)) {
+            if (!watermark.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.style.display = 'none';
                 watermark.style.filter = 'none';
                 watermark.style.transform = 'scale(1)';
@@ -221,7 +222,7 @@ function setupMenu() {
             top: '100%',
             left: '0',
             width: '160px',
-            backgroundColor: 'rgba(255,69,0,0.2)', // Cor mais próxima do tema Doritos
+            backgroundColor: 'rgba(255,69,0,0.2)',
             borderRadius: '10px',
             color: 'white',
             fontSize: '13px',
@@ -232,10 +233,11 @@ function setupMenu() {
             padding: '5px',
             cursor: 'default',
             userSelect: 'none',
-            transition: 'transform 0.3s ease',
+            transition: 'none',
             backdropFilter: 'blur(2px)',
             WebkitBackdropFilter: 'blur(2px)',
-            border: '1px solid rgba(255,69,0,0.3)' // Borda sutil no tema Doritos
+            border: '1px solid rgba(255,69,0,0.3)',
+            pointerEvents: 'auto'
         });
         dropdownMenu.innerHTML = `
             <style>
