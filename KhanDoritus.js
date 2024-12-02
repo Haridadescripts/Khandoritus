@@ -419,30 +419,23 @@ function setupMain(){
         }, 3000);
     }
     async function autoAnswer() {
-        const correctAnswerSelector = '._yxmlvoe.perseus-radio-option'; // Classe para opções de resposta
-        const verifyButtonSelector = 'button.verify-button-class'; // Substitua pela classe correta do botão "Verificar"
+        const correctAnswerSelector = '._yxmlvoe.perseus-radio-option';
         const nextButtonSelector = 'button._1f0fvyce[aria-disabled="false"]';
         
         while (true) {
             if(features.autoAnswer && features.questionSpoof) {
-                // Seleciona a resposta correta
-                const correctAnswer = Array.from(document.querySelectorAll(correctAnswerSelector))
-                    .find(el => el.textContent.includes("Resposta correta"));
+                // Procura e clica na resposta correta
+                const allAnswers = document.querySelectorAll(correctAnswerSelector);
+                const correctAnswer = Array.from(allAnswers)
+                    .find(answer => answer.textContent.trim() === "Resposta correta");
+                    
                 if(correctAnswer) {
                     correctAnswer.click();
-                    sendToast("✅ Resposta correta selecionada", 1000);
+                    sendToast("✅ Resposta selecionada", 1000);
                     await delay(500);
                 }
 
-                // Clica no botão "Verificar"
-                const verifyButton = document.querySelector(verifyButtonSelector);
-                if(verifyButton) {
-                    verifyButton.click();
-                    sendToast("🔍 Verificando resposta", 1000);
-                    await delay(500);
-                }
-
-                // Clica no botão "Próxima"
+                // Clica no botão próximo
                 const nextButton = document.querySelector(nextButtonSelector);
                 if(nextButton) {
                     nextButton.click();
