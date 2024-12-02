@@ -62,9 +62,9 @@ new MutationObserver((mutationsList) => { for (let mutation of mutationsList) if
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const playAudio = url => { const audio = new Audio(url); audio.play(); };
 const checkCollision = (obj1, obj2) => !( obj1.right < obj2.left || obj1.left > obj2.right || obj1.bottom < obj2.top || obj1.top > obj2.bottom );
-const findAndClickByClass = className => { const element = document.querySelector(`.${className}`); if (element) { element.click(); sendToast(`🎯 KhanDoritus: Respondendo questão...`, 1000); } }
+const findAndClickByClass = className => { const element = document.querySelector(`.${className}`); if (element) { element.click(); sendToast(`⭕ Pressionando ${className}...`, 1000); } }
 
-function sendToast(text, duration=5000, gravity='bottom') { Toastify({ text: text, duration: duration, gravity: gravity, position: "center", stopOnFocus: true, style: { background: "#1a1a1a", border: "1px solid #333", borderRadius: "8px", boxShadow: "0 2px 5px rgba(0,0,0,0.2)", color: "#fff", fontFamily: "Arial, sans-serif" } }).showToast(); };
+function sendToast(text, duration=5000, gravity='bottom') { Toastify({ text: text, duration: duration, gravity: gravity, position: "center", stopOnFocus: true, style: { background: "#000000" } }).showToast(); };
 
 async function showSplashScreen() { splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#000;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; splashScreen.innerHTML = '<span style="color:white;">KHANWARE</span><span style="color:#72ff72;">.SPACE</span>'; document.body.appendChild(splashScreen); setTimeout(() => splashScreen.style.opacity = '1', 10);};
 async function hideSplashScreen() { splashScreen.style.opacity = '0'; setTimeout(() => splashScreen.remove(), 1000); };
@@ -381,29 +381,14 @@ function setupMain(){
     async function autoAnswer() {
         const baseClasses = ["_1tuo6xk", "_ssxvf9l", "_1f0fvyce", "_rz7ls7u", "_1yok8f4", "_1e5cuk2a"];
         while (true) {
-            if(features.autoAnswer && features.questionSpoof) {
-                const units = document.querySelectorAll('.unit-header');
-                units.forEach(unit => {
-                    const classToCheck = [...baseClasses];
-                    if (features.nextRecomendation) { 
-                        device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); 
-                    }
-                    if (features.repeatQuestion) classToCheck.push("_1abyu0ga");
-                    
-                    classToCheck.forEach(async (q) => {
-                        findAndClickByClass(q);
-                        const element = document.getElementsByClassName(q)[0];
-                        if(element && element.textContent=='Mostrar resumo') {
-                            sendToast("🎯 KhanDoritus: Unidade Concluída!", 3000);
-                            playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav');
-                            
-                            const nextUnit = unit.nextElementSibling;
-                            if(nextUnit) {
-                                nextUnit.click();
-                                sendToast("⏭️ KhanDoritus: Próxima unidade iniciada!", 2000);
-                            }
-                        }
-                    });
+            if(features.autoAnswer&&features.questionSpoof){
+                const classToCheck = [...baseClasses];
+                if (features.nextRecomendation) { device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); }
+                if (features.repeatQuestion) classToCheck.push("_1abyu0ga");
+                classToCheck.forEach(async (q) => {
+                    findAndClickByClass(q);
+                    const element = document.getElementsByClassName(q)[0];
+                    if(element&&element.textContent=='Mostrar resumo') { sendToast("🎉 Exercício concluido!", 3000); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); }
                 });
             }
             await delay(featureConfigs.autoAnswerDelay*750);
