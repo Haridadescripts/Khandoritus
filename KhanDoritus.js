@@ -66,12 +66,7 @@ const findAndClickByClass = className => { const element = document.querySelecto
 
 function sendToast(text, duration=5000, gravity='bottom') { Toastify({ text: text, duration: duration, gravity: gravity, position: "center", stopOnFocus: true, style: { background: "#000000" } }).showToast(); };
 
-async function showSplashScreen() { 
-    splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#FF4500;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; 
-    splashScreen.innerHTML = '<span style="color:white;">KHAN</span><span style="color:#FFA500;">DORITUS</span>'; 
-    document.body.appendChild(splashScreen); 
-    setTimeout(() => splashScreen.style.opacity = '1', 10);
-};
+async function showSplashScreen() { splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#000;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; splashScreen.innerHTML = '<span style="color:white;">KHANWARE</span><span style="color:#72ff72;">.SPACE</span>'; document.body.appendChild(splashScreen); setTimeout(() => splashScreen.style.opacity = '1', 10);};
 async function hideSplashScreen() { splashScreen.style.opacity = '0'; setTimeout(() => splashScreen.remove(), 1000); };
 
 async function loadScript(url, label) { return fetch(url).then(response => response.text()).then(script => { loadedPlugins.push(label); eval(script); }); }
@@ -142,172 +137,34 @@ function setupMenu() {
         });
     }
     function setupWatermark() {
-        // Criar o botão de menu flutuante
-        const menuButton = document.createElement('menuButton');
-        Object.assign(menuButton.style, {
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            width: '50px',
-            height: '50px',
-            backgroundColor: '#FF4500', // Laranja Doritos
-            borderRadius: '50%',
-            cursor: 'pointer',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            boxShadow: '0 2px 5px rgba(255, 69, 0, 0.4)', // Sombra laranja
-            zIndex: '1002',
-            transition: 'all 0.3s ease'
+        Object.assign(watermark.style, {
+            position: 'fixed', top: '0', left: '85%', width: '150px', height: '30px', backgroundColor: 'RGB(0,0,0,0.5)',
+            color: 'white', fontSize: '15px', fontFamily: 'MuseoSans, sans-serif', display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+            cursor: 'default', userSelect: 'none', padding: '0 10px',  borderRadius: '10px', zIndex: '1001', transition: 'transform 0.3s ease'
         });
-
-        // Ajustar o estilo do menu dropdown
-        Object.assign(dropdownMenu.style, {
-            position: 'absolute',
-            top: '100%',
-            right: '0',
-            width: '160px',
-            backgroundColor: 'rgba(255, 69, 0, 0.95)', // Fundo laranja semi-transparente
-            borderRadius: '10px',
-            color: 'white',
-            fontSize: '13px',
-            fontFamily: 'MuseoSans, sans-serif',
-            display: 'none',
-            flexDirection: 'column',
-            zIndex: '1000',
-            padding: '10px',
-            cursor: 'default',
-            userSelect: 'none',
-            transition: 'transform 0.3s ease',
-            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.3)', // Sombra laranja suave
-            border: '2px solid #FF5722' // Borda laranja mais escura
-        });
-
-        // Atualizar os estilos dos inputs no menu
-        const menuStyles = `
-            <style>
-                input[type="checkbox"] {
-                    appearance: none;
-                    width: 15px;
-                    height: 15px;
-                    background-color: rgba(255, 255, 255, 0.1);
-                    border: 2px solid #FFA500;
-                    border-radius: 3px;
-                    margin-right: 5px;
-                    cursor: pointer;
-                }
-                input[type="checkbox"]:checked {
-                    background-color: #FFA500;
-                    border-color: #FF8C00;
-                }
-                input[type="text"], input[type="number"], input[type="range"] {
-                    width: calc(100% - 10px);
-                    border: 1px solid #FF8C00;
-                    color: white;
-                    accent-color: #FFA500;
-                    background: rgba(255, 255, 255, 0.1);
-                    padding: 5px;
-                    border-radius: 3px;
-                }
-                label {
-                    display: flex;
-                    align-items: center;
-                    color: white;
-                    padding: 5px 0;
-                    transition: all 0.2s ease;
-                }
-                label:hover {
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 5px;
-                    padding-left: 5px;
-                }
-            </style>
-        `;
-        dropdownMenu.innerHTML = menuStyles + dropdownMenu.innerHTML;
-
-        // Resto do código permanece o mesmo...
-        // Apenas atualize as cores dos efeitos hover e click
-        menuButton.addEventListener('mouseenter', () => {
-            menuButton.style.transform = 'scale(1.1)';
-            menuButton.style.backgroundColor = '#FF5722'; // Laranja mais escuro no hover
-        });
-
-        menuButton.addEventListener('mouseleave', () => {
-            if (!menuOpen) {
-                menuButton.style.transform = 'scale(1)';
-                menuButton.style.backgroundColor = '#FF4500';
-            }
-        });
-
-        menuButton.addEventListener('mousedown', () => {
-            menuButton.style.backgroundColor = '#FF6347'; // Cor de clique
-        });
-
-        menuButton.addEventListener('mouseup', () => {
-            menuButton.style.backgroundColor = '#FF4500';
-        });
-
-        // O resto do código continua igual...
+        if (device.mobile) watermark.style.left = '55%'
+        watermark.innerHTML = `<span style="text-shadow: -1px 0.5px 0 #72ff72, -2px 0px 0 #2f672e;">KW</span> <span style="color:gray; padding-left:2px; font-family: Arial, sans-serif; font-size:10px">${ver}</span>`;
+        document.body.appendChild(watermark);
+        let isDragging = false, offsetX, offsetY;
+        watermark.addEventListener('mousedown', e => { if (!dropdownMenu.contains(e.target)) { isDragging = true; offsetX = e.clientX - watermark.offsetLeft; offsetY = e.clientY - watermark.offsetTop; watermark.style.transform = 'scale(0.9)'; unloader.style.transform = 'scale(1)'; } });
+        watermark.addEventListener('mouseup', () => { isDragging = false; watermark.style.transform = 'scale(1)'; unloader.style.transform = 'scale(0)'; if (checkCollision(watermark.getBoundingClientRect(), unloader.getBoundingClientRect())) unload(); });
+        document.addEventListener('mousemove', e => { if (isDragging) { let newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - watermark.offsetWidth)); let newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - watermark.offsetHeight)); Object.assign(watermark.style, { left: `${newX}px`, top: `${newY}px` }); dropdownMenu.style.display = 'none'; } });
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
-            position: 'absolute', 
-            top: '100%', 
-            left: '0', 
-            width: '160px', 
-            backgroundColor: 'rgba(255, 69, 0, 0.95)', // Fundo laranja semi-transparente
-            borderRadius: '10px', 
-            color: 'white', 
-            fontSize: '13px', 
-            fontFamily: 'MuseoSans, sans-serif',
-            display: 'none', 
-            flexDirection: 'column', 
-            zIndex: '1000', 
-            padding: '10px', 
-            cursor: 'default',
-            userSelect: 'none', 
-            transition: 'transform 0.3s ease',
-            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.3)', // Sombra laranja
-            border: '2px solid #FF5722' // Borda laranja mais escura
+            position: 'absolute', top: '100%', left: '0', width: '160px', backgroundColor: 'rgba(0,0,0,0.3)',
+            borderRadius: '10px', color: 'white', fontSize: '13px', fontFamily: 'Monospace, sans-serif',
+            display: 'none', flexDirection: 'column', zIndex: '1000', padding: '5px', cursor: 'default',
+            userSelect: 'none', transition: 'transform 0.3s ease', backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)'
         });
-
         dropdownMenu.innerHTML = `
             <style>
-                input[type="checkbox"] {
-                    appearance: none; 
-                    width: 15px; 
-                    height: 15px; 
-                    background-color: rgba(255, 255, 255, 0.1);
-                    border: 2px solid #FFA500; 
-                    border-radius: 3px; 
-                    margin-right: 5px; 
-                    cursor: pointer;
-                }
-                input[type="checkbox"]:checked {
-                    background-color: #FFA500;
-                    border-color: #FF8C00;
-                }
-                input[type="text"], input[type="number"], input[type="range"] {
-                    width: calc(100% - 10px); 
-                    border: 1px solid #FF8C00;
-                    color: white; 
-                    accent-color: #FFA500;
-                    background: rgba(255, 255, 255, 0.1);
-                    padding: 5px;
-                    border-radius: 3px;
-                }
-                label {
-                    display: flex; 
-                    align-items: center; 
-                    color: white; 
-                    padding: 5px 0;
-                    transition: all 0.2s ease;
-                }
-                label:hover {
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 5px;
-                    padding-left: 5px;
-                }
+                input[type="checkbox"] {appearance: none; width: 15px; height: 15px; background-color: #3a3a3b;
+                border: 1px solid #acacac; border-radius: 3px; margin-right: 5px; cursor: pointer;}
+                input[type="checkbox"]:checked {background-color: #540b8a; border-color: #720fb8;}
+                input[type="text"], input[type="number"], input[type="range"] {width: calc(100% - 10px); border: 1px solid #343434; 
+                color: white; accent-color: #540b8a; background-color: #540b8a; padding: 3px; border-radius: 3px; background: none;}
+                label {display: flex; align-items: center; color: #3a3a3b; padding-top: 3px;}
             </style>
         `;
         watermark.appendChild(dropdownMenu);
@@ -340,14 +197,7 @@ function setupMenu() {
         }
         handleInput('autoAnswer', checked => checked && !features.questionSpoof && (document.querySelector('[setting-data="features.questionSpoof"]').checked = features.questionSpoof = true));
         handleInput('autoAnswerDelay', value => value && (featureConfigs.autoAnswerDelay = 4 - value));
-        handleInput('darkMode', checked => {
-            if (checked) {
-                setupDoritosBackground();
-            } else {
-                const existingStyle = document.querySelector('style');
-                if (existingStyle) existingStyle.remove();
-            }
-        });
+        handleInput('darkMode', checked => checked ? (DarkReader.setFetchMethod(window.fetch), DarkReader.enable()) : DarkReader.disable());
         handleInput('onekoJs', checked => { onekoEl = document.getElementById('oneko'); if (onekoEl) {onekoEl.style.display = checked ? null : "none"} });
         watermark.addEventListener('mouseenter', () => { dropdownMenu.style.display = 'flex'; playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav'); } );
         watermark.addEventListener('mouseleave', e => { !watermark.contains(e.relatedTarget) && (dropdownMenu.style.display = 'none'); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/rqizlm03.wav'); });
@@ -397,6 +247,7 @@ function setupMenu() {
 /* Main Functions */ 
 function setupMain(){
     function spoofQuestion() {
+        const phrases = [ "🔥 Get good, get [Khanware](https://github.com/Niximkk/khanware/)!", "🤍 Made by [@im.nix](https://e-z.bio/sounix).", "☄️ By github.com/Niximkk/khanware/ " ];
         const originalFetch = window.fetch;
         window.fetch = async function (input, init) {
             let body;
@@ -411,10 +262,10 @@ function setupMain(){
                     let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
                     if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
                         itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
-                        itemData.question.content = "🔥 Pegue um Doritos! [[☃ radio 1]]";
-                        itemData.question.widgets = { "radio 1": { options: { choices: [ { content: "Pegar Doritos", correct: true }, { content: "Não pegar Doritos", correct: false } ] } } };
+                        itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
+                        itemData.question.widgets = { "radio 1": { options: { choices: [ { content: "Resposta correta.", correct: true }, { content: "Resposta incorreta.", correct: false } ] } } };
                         responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                        sendToast("🔓 Doritos liberado!", 1000);
+                        sendToast("🔓 Questão exploitada.", 1000);
                         return new Response(JSON.stringify(responseObj), { status: originalResponse.status, statusText: originalResponse.statusText, headers: originalResponse.headers });
                     }
                 }
