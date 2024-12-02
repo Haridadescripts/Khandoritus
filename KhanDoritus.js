@@ -41,6 +41,11 @@ window.featureConfigs = {
     customPfp: ""
 };
 
+/* Security */
+document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J'))) e.preventDefault(); });
+console.log(Object.defineProperties(new Error, { toString: {value() {(new Error).stack.includes('toString@') && location.reload();}}, message: {get() {location.reload();}}, }));
+
 /* Misc Styles */
 // Most of these will eventually stop working, as my proxy will become inactive.
 document.head.appendChild(Object.assign(document.createElement("style"),{innerHTML:"@font-face{font-family:'MuseoSans';src:url('https://proxy.khanware.space/r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/ynddewua.ttf')format('truetype')}" }));
@@ -62,33 +67,9 @@ const findAndClickByClass = className => { const element = document.querySelecto
 function sendToast(text, duration=5000, gravity='bottom') { Toastify({ text: text, duration: duration, gravity: gravity, position: "center", stopOnFocus: true, style: { background: "#000000" } }).showToast(); };
 
 async function showSplashScreen() { 
-    splashScreen.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-        user-select: none;
-        color: white;
-        font-family: MuseoSans, sans-serif;
-        font-size: 30px;
-        text-align: center;
-    `; 
-    
-    splashScreen.innerHTML = `
-        <span style="color: white;">KHAN<span style="color: #FF4500;">DORITUS</span></span>
-        <img src="https://i.imgur.com/XYZ123.png" style="width: 150px; margin-top: 20px;" alt="Doritos">
-    `; 
-    
-    document.body.appendChild(splashScreen);
+    splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#FF4500;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; 
+    splashScreen.innerHTML = '<span style="color:white;">KHAN</span><span style="color:#FFA500;">DORITUS</span>'; 
+    document.body.appendChild(splashScreen); 
     setTimeout(() => splashScreen.style.opacity = '1', 10);
 }
 async function hideSplashScreen() { splashScreen.style.opacity = '0'; setTimeout(() => splashScreen.remove(), 1000); };
@@ -162,12 +143,20 @@ function setupMenu() {
     }
     function setupWatermark() {
         Object.assign(watermark.style, {
-            position: 'fixed', top: '0', left: '85%', width: '150px', height: '30px', backgroundColor: 'RGB(0,0,0,0.5)',
-            color: 'white', fontSize: '15px', fontFamily: 'MuseoSans, sans-serif', display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-            cursor: 'default', userSelect: 'none', padding: '0 10px',  borderRadius: '10px', zIndex: '1001', transition: 'transform 0.3s ease'
+            position: 'fixed', 
+            top: '0', 
+            left: '85%', 
+            width: '50px',  // Reduced width for icon
+            height: '50px', // Made square for icon
+            backgroundColor: 'transparent',
+            cursor: 'default', 
+            userSelect: 'none', 
+            zIndex: '1001', 
+            transition: 'transform 0.3s ease'
         });
         if (device.mobile) watermark.style.left = '55%'
-        watermark.innerHTML = `<span style="text-shadow: -1px 0.5px 0 #72ff72, -2px 0px 0 #2f672e;">KW</span> <span style="color:gray; padding-left:2px; font-family: Arial, sans-serif; font-size:10px">${ver}</span>`;
+        // Replace text with Doritos icon
+        watermark.innerHTML = `<img src="https://raw.githubusercontent.com/YourRepo/doritos-icon.png" style="width:100%;height:100%;object-fit:contain;">`;
         document.body.appendChild(watermark);
         let isDragging = false, offsetX, offsetY;
         watermark.addEventListener('mousedown', e => { if (!dropdownMenu.contains(e.target)) { isDragging = true; offsetX = e.clientX - watermark.offsetLeft; offsetY = e.clientY - watermark.offsetTop; watermark.style.transform = 'scale(0.9)'; unloader.style.transform = 'scale(1)'; } });
@@ -271,6 +260,11 @@ function setupMenu() {
 /* Main Functions */ 
 function setupMain(){
     function spoofQuestion() {
+        const phrases = [ 
+            "🔥 Get crunchy with Khan Doritus!", 
+            "🌶️ Spicy like Doritos!", 
+            "🧀 Cheesy good learning!"
+        ];
         const originalFetch = window.fetch;
         window.fetch = async function (input, init) {
             let body;
@@ -283,27 +277,34 @@ function setupMain(){
                 let responseObj = JSON.parse(responseBody);
                 if (features.questionSpoof && responseObj?.data?.assessmentItem?.item?.itemData) {
                     let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
-                    if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
-                        itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
-                        itemData.question.content = "Selecione a resposta correta" + `[[ radio 1]]`;
-                        itemData.question.widgets = { 
-                            "radio 1": { 
-                                options: { 
-                                    choices: [
-                                        { content: "Resposta correta", correct: true },
-                                        { content: "Resposta falsa", correct: false }
-                                    ]
-                                }
-                            }
-                        };
-                        responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                        sendToast(" Questão modificada", 1000);
-                        return new Response(JSON.stringify(responseObj), { 
-                            status: originalResponse.status, 
-                            statusText: originalResponse.statusText, 
-                            headers: originalResponse.headers 
-                        });
+                    // Hide original question content
+                    document.querySelectorAll('.perseus-renderer').forEach(el => el.style.display = 'none');
+                    
+                    // Create simplified spoof question
+                    itemData.answerArea = { 
+                        "calculator": false, 
+                        "chi2Table": false, 
+                        "periodicTable": false, 
+                        "tTable": false, 
+                        "zTable": false 
                     }
+                    itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
+                    itemData.question.widgets = { 
+                        "radio 1": { 
+                            options: { 
+                                choices: [
+                                    { content: "Continue", correct: true }
+                                ] 
+                            } 
+                        } 
+                    };
+                    responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
+                    sendToast("🌶️ Doritus Power Activated!", 1000);
+                    return new Response(JSON.stringify(responseObj), { 
+                        status: originalResponse.status, 
+                        statusText: originalResponse.statusText, 
+                        headers: originalResponse.headers 
+                    });
                 }
             } catch (e) { }
             return originalResponse;
@@ -408,40 +409,26 @@ function setupMain(){
         })
     }
     function changeBannerText() {
-        const phrases = [
-            "[🌿] Haridade said hello",
-            "[🌿] Doritus On Top",
-            "[🌿] Khan Doritus The Best"
-        ];
+        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[🌿] Get good get Khanware!", "[🌿] the old khanware.space" ];
         setInterval(() => { 
             const greeting = document.querySelector('.stp-animated-banner h2');
             if (greeting&&features.customBanner) greeting.textContent = phrases[Math.floor(Math.random() * phrases.length)];
         }, 3000);
     }
     async function autoAnswer() {
-        const verifyButtonClass = '_rz7ls7u';  // Classe do botão de verificar
-        const nextButtonClass = '_1f0fvyce';  // Classe do botão de próxima questão
-        
+        const baseClasses = ["_1tuo6xk", "_ssxvf9l", "_1f0fvyce", "_rz7ls7u", "_1yok8f4", "_1e5cuk2a"];
         while (true) {
-            if(features.autoAnswer && features.questionSpoof) {
-                // Clica no botão de verificar resposta
-                const verifyButton = document.querySelector(`.${verifyButtonClass}`);
-                if(verifyButton) {
-                    await delay(1000); // Delay de 1 segundo antes de clicar
-                    verifyButton.click();
-                    sendToast("🔘 Verificando resposta", 1000);
-                    await delay(2000); // Espera 2 segundos para processar a resposta
-                }
-
-                // Clica no botão próximo
-                const nextButton = document.querySelector(`.${nextButtonClass}[aria-disabled="false"]`);
-                if(nextButton) {
-                    nextButton.click();
-                    sendToast("⏭️ Próxima questão", 1000);
-                    await delay(500);
-                }
+            if(features.autoAnswer&&features.questionSpoof){
+                const classToCheck = [...baseClasses];
+                if (features.nextRecomendation) { device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); }
+                if (features.repeatQuestion) classToCheck.push("_1abyu0ga");
+                classToCheck.forEach(async (q) => {
+                    findAndClickByClass(q);
+                    const element = document.getElementsByClassName(q)[0];
+                    if(element&&element.textContent=='Mostrar resumo') { sendToast("🎉 Exercício concluido!", 3000); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); }
+                });
             }
-            await delay(featureConfigs.autoAnswerDelay * 750);
+            await delay(featureConfigs.autoAnswerDelay*750);
         }
     }
     spoofQuestion(); spoofVideo(); answerRevealer(); minuteFarm(); spoofUser(); rgbLogo(); changeBannerText(); autoAnswer();
@@ -547,27 +534,3 @@ loadScript('https://cdn.jsdelivr.net/npm/toastify-js', 'toastifyPlugin')
 @antonio77xs
 @marcus.floriano.oliveira
 */
-
-// Função para clicar automaticamente no botão de próxima pergunta
-function autoNextQuestion() {
-    // Aguarda o elemento estar disponível no DOM
-    const checkElement = setInterval(() => {
-        // Procura pelo botão de próxima questão que não esteja desabilitado
-        const nextButton = document.querySelector('._1f0fvyce[aria-disabled="false"]');
-        
-        if (nextButton) {
-            // Botão encontrado e habilitado, realiza o clique
-            nextButton.click();
-            sendToast("⏭️ Próxima questão", 1000);
-            // Limpa o intervalo após encontrar e clicar
-            clearInterval(checkElement);
-        }
-    }, 1000); // Verifica a cada 1 segundo
-}
-
-// Executa a função quando a página carregar
-window.addEventListener('load', () => {
-    if(features.autoAnswer && features.questionSpoof) {
-        autoNextQuestion();
-    }
-});
