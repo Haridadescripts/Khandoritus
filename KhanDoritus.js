@@ -66,7 +66,36 @@ const findAndClickByClass = className => { const element = document.querySelecto
 
 function sendToast(text, duration=5000, gravity='bottom') { Toastify({ text: text, duration: duration, gravity: gravity, position: "center", stopOnFocus: true, style: { background: "#000000" } }).showToast(); };
 
-async function showSplashScreen() { splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#000;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; splashScreen.innerHTML = '<span style="color:white;">KHANWARE</span><span style="color:#72ff72;">.SPACE</span>'; document.body.appendChild(splashScreen); setTimeout(() => splashScreen.style.opacity = '1', 10);};
+async function showSplashScreen() { 
+    splashScreen.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        user-select: none;
+        color: white;
+        font-family: MuseoSans, sans-serif;
+        font-size: 30px;
+        text-align: center;
+    `; 
+    
+    splashScreen.innerHTML = `
+        <span style="color: white;">KHAN<span style="color: #FF4500;">DORITUS</span></span>
+        <img src="https://i.imgur.com/XYZ123.png" style="width: 150px; margin-top: 20px;" alt="Doritos">
+    `; 
+    
+    document.body.appendChild(splashScreen);
+    setTimeout(() => splashScreen.style.opacity = '1', 10);
+}
 async function hideSplashScreen() { splashScreen.style.opacity = '0'; setTimeout(() => splashScreen.remove(), 1000); };
 
 async function loadScript(url, label) { return fetch(url).then(response => response.text()).then(script => { loadedPlugins.push(label); eval(script); }); }
@@ -273,7 +302,7 @@ function setupMain(){
                             }
                         };
                         responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                        sendToast("🔓 Questão modificada", 1000);
+                        sendToast("���� Questão modificada", 1000);
                         return new Response(JSON.stringify(responseObj), { 
                             status: originalResponse.status, 
                             statusText: originalResponse.statusText, 
