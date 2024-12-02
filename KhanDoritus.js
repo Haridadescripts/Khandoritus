@@ -146,8 +146,8 @@ function setupMenu() {
             position: 'fixed', 
             top: '0', 
             left: '85%', 
-            width: '100px', 
-            height: '40px', 
+            width: '50px',  
+            height: '50px', 
             backgroundColor: 'transparent',
             cursor: 'default', 
             userSelect: 'none', 
@@ -156,52 +156,27 @@ function setupMenu() {
         });
         if (device.mobile) watermark.style.left = '55%'
         
-        // Logo oficial do Doritos
+        // Usando SVG do Doritos como ícone
         watermark.innerHTML = `
-            <svg viewBox="0 0 1200 400" style="width:100%;height:100%;">
-                <defs>
-                    <linearGradient id="doritos-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:#FF4500"/>
-                        <stop offset="100%" style="stop-color:#FF8C00"/>
-                    </linearGradient>
-                </defs>
-                <path fill="black" stroke="#FF0000" stroke-width="2" d="M50,50 L1150,50 L600,350 Z"/>
-                <path fill="url(#doritos-gradient)" d="M200,100 L1000,100 L600,300 Z"/>
-                <text x="600" y="200" fill="white" font-family="Arial Black" font-size="120" text-anchor="middle" style="text-transform:uppercase;font-weight:900;">Doritos</text>
+            <svg viewBox="0 0 24 24" style="width:100%;height:100%;fill:#FF4500;">
+                <path d="M12 2L2 22h20L12 2zm-1 15l-3-3 3-3 3 3-3 3zm2-7l3-3 3 3-3 3-3-3zm-4 0l-3 3-3-3 3-3 3 3z"/>
             </svg>
         `;
         
         document.body.appendChild(watermark);
         
-        // Remover completamente os eventos de hover do watermark
-        watermark.addEventListener('click', (e) => {
-            e.stopPropagation(); // Previne que o click se propague para o document
-            if (!dropdownMenu.contains(e.target)) {
-                const isVisible = dropdownMenu.style.display === 'flex';
-                dropdownMenu.style.display = isVisible ? 'none' : 'flex';
-                
-                // Efeito visual ao clicar
-                watermark.style.filter = isVisible ? 'none' : 'brightness(1.2) drop-shadow(0 0 5px #FF4500)';
-                watermark.style.transform = isVisible ? 'scale(1)' : 'scale(1.1)';
-                
-                // Som ao abrir/fechar o menu
-                playAudio(isVisible ? 
-                    'https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/rqizlm03.wav' : 
-                    'https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav'
-                );
-            }
+        // Adicionar efeito hover
+        watermark.addEventListener('mouseenter', () => {
+            watermark.style.filter = 'brightness(1.2)';
+            watermark.style.transform = 'scale(1.1)';
+        });
+        
+        watermark.addEventListener('mouseleave', () => {
+            watermark.style.filter = 'none';
+            watermark.style.transform = 'scale(1)';
         });
 
-        // Fechar menu ao clicar fora
-        document.addEventListener('click', (e) => {
-            if (!watermark.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                dropdownMenu.style.display = 'none';
-                watermark.style.filter = 'none';
-                watermark.style.transform = 'scale(1)';
-            }
-        });
-
-        // Modificar o código de arrastar para manter o menu fechado
+        // Resto do código do watermark permanece o mesmo
         let isDragging = false, offsetX, offsetY;
         watermark.addEventListener('mousedown', e => { 
             if (!dropdownMenu.contains(e.target)) { 
@@ -209,8 +184,7 @@ function setupMenu() {
                 offsetX = e.clientX - watermark.offsetLeft; 
                 offsetY = e.clientY - watermark.offsetTop; 
                 watermark.style.transform = 'scale(0.9)'; 
-                unloader.style.transform = 'scale(1)';
-                dropdownMenu.style.display = 'none'; // Fechar menu ao começar a arrastar
+                unloader.style.transform = 'scale(1)'; 
             } 
         });
         watermark.addEventListener('mouseup', () => { isDragging = false; watermark.style.transform = 'scale(1)'; unloader.style.transform = 'scale(0)'; if (checkCollision(watermark.getBoundingClientRect(), unloader.getBoundingClientRect())) unload(); });
@@ -222,7 +196,7 @@ function setupMenu() {
             top: '100%',
             left: '0',
             width: '180px',
-            backgroundColor: 'rgba(20, 20, 20, 0.95)',
+            backgroundColor: 'rgba(255, 69, 0, 0.15)',
             borderRadius: '12px',
             color: 'white',
             fontSize: '13px',
@@ -236,9 +210,9 @@ function setupMenu() {
             transition: 'none',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255, 69, 0, 0.2)',
+            border: '2px solid rgba(255, 69, 0, 0.3)',
             pointerEvents: 'auto',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
+            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.2)'
         });
 
         dropdownMenu.innerHTML = `
@@ -248,7 +222,7 @@ function setupMenu() {
                     margin-bottom: 8px;
                     padding: 8px;
                     border-radius: 8px;
-                    background: rgba(255, 69, 0, 0.05);
+                    background: rgba(255, 69, 0, 0.1);
                 }
 
                 /* Estilo dos checkboxes */
@@ -256,7 +230,7 @@ function setupMenu() {
                     appearance: none;
                     width: 40px;
                     height: 20px;
-                    background-color: rgba(255, 255, 255, 0.1);
+                    background-color: rgba(255, 255, 255, 0.2);
                     border-radius: 20px;
                     position: relative;
                     cursor: pointer;
@@ -279,6 +253,7 @@ function setupMenu() {
 
                 input[type="checkbox"]:checked {
                     background-color: #FF4500;
+                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
                 }
 
                 input[type="checkbox"]:checked::before {
@@ -289,9 +264,9 @@ function setupMenu() {
                 input[type="text"], input[type="number"] {
                     width: calc(100% - 16px);
                     padding: 8px;
-                    border: 1px solid rgba(255, 69, 0, 0.3);
+                    border: 1px solid #FF4500;
                     border-radius: 6px;
-                    background: rgba(30, 30, 30, 0.9);
+                    background: rgba(255, 69, 0, 0.1);
                     color: white;
                     font-size: 12px;
                     transition: all 0.3s ease;
@@ -301,7 +276,7 @@ function setupMenu() {
                 input[type="text"]:focus, input[type="number"]:focus {
                     border-color: #FF4500;
                     outline: none;
-                    box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.2);
+                    box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.3);
                 }
 
                 /* Estilo do slider */
@@ -309,7 +284,7 @@ function setupMenu() {
                     -webkit-appearance: none;
                     width: 100%;
                     height: 4px;
-                    background: rgba(255, 255, 255, 0.1);
+                    background: rgba(255, 255, 255, 0.2);
                     border-radius: 2px;
                     margin: 10px 0;
                 }
@@ -318,14 +293,16 @@ function setupMenu() {
                     -webkit-appearance: none;
                     width: 16px;
                     height: 16px;
-                    background: #FF4500;
+                    background: #FFD700; /* Amarelo para o slider */
                     border-radius: 50%;
                     cursor: pointer;
                     transition: all 0.3s ease;
+                    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
                 }
 
                 input[type="range"]::-webkit-slider-thumb:hover {
                     transform: scale(1.1);
+                    background: #FFC000;
                 }
 
                 /* Estilo das labels */
@@ -351,32 +328,34 @@ function setupMenu() {
                     letter-spacing: 1px;
                     margin-bottom: 6px;
                     font-weight: bold;
+                    text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
                 }
 
                 /* Divisor entre seções */
                 .divider {
                     height: 1px;
-                    background: rgba(255, 69, 0, 0.2);
+                    background: rgba(255, 69, 0, 0.3);
                     margin: 8px 0;
+                    box-shadow: 0 0 5px rgba(255, 69, 0, 0.2);
                 }
             </style>
         `;
-
-        // Adicione classes para agrupar opções relacionadas
+        
+        watermark.appendChild(dropdownMenu);
         let featuresList = [
-            [{ type: 'title', text: 'QUESTÕES' }],
-            [{ name: 'questionSpoof', type: 'checkbox', variable: 'features.questionSpoof', attributes: 'checked', labeled: true, label: 'Pular Questões' },
-            { name: 'showAnswers', type: 'checkbox', variable: 'features.showAnswers', labeled: true, label: 'Mostrar Respostas' }],
-            [{ type: 'divider' }],
-            [{ type: 'title', text: 'AUTOMAÇÃO' }],
-            [{ name: 'autoAnswer', type: 'checkbox', variable: 'features.autoAnswer', dependent: 'autoAnswerDelay,nextRecomendation,repeatQuestion', labeled: true, label: 'Auto Responder' },
-            { name: 'videoSpoof', type: 'checkbox', variable: 'features.videoSpoof', attributes: 'checked', labeled: true, label: 'Pular Vídeos' }],
-            [{ type: 'divider' }],
-            [{ type: 'title', text: 'VISUAL' }],
-            [{ name: 'customBanner', type: 'checkbox', variable: 'features.customBanner', labeled: true, label: 'Banner Personalizado' },
-            { name: 'rgbLogo', type: 'checkbox', variable: 'features.rgbLogo', labeled: true, label: 'Logo RGB' }]
-        ];
-
+            [{ name: 'questionSpoof', type: 'checkbox', variable: 'features.questionSpoof', attributes: 'checked', labeled: true, label: 'Question Spoof' },
+            { name: 'videoSpoof', type: 'checkbox', variable: 'features.videoSpoof', attributes: 'checked', labeled: true, label: 'Video Spoof' },
+            { name: 'showAnswers', type: 'checkbox', variable: 'features.showAnswers', labeled: true, label: 'Answer Revealer' }],
+            [{ name: 'autoAnswer', type: 'checkbox', variable: 'features.autoAnswer', dependent: 'autoAnswerDelay,nextRecomendation,repeatQuestion', labeled: true, label: 'Auto Answer' },
+            { name: 'repeatQuestion', className: 'repeatQuestion', type: 'checkbox', variable: 'features.repeatQuestion', attributes: 'style="display:none;"', labeled: true, label: 'Repeat Question' },
+            { name: 'nextRecomendation', className: 'nextRecomendation', type: 'checkbox', variable: 'features.nextRecomendation', attributes: 'style="display:none;"', labeled: true, label: 'Recomendations' },
+            { name: 'autoAnswerDelay', className: 'autoAnswerDelay', type: 'range', variable: 'features.autoAnswerDelay', attributes: 'style="display:none;" min="1" max="3" value="1"', labeled: false }],
+            [{ name: 'minuteFarm', type: 'checkbox', variable: 'features.minuteFarmer', labeled: true, label: 'Minute Farmer' },
+            { name: 'customBanner', type: 'checkbox', variable: 'features.customBanner', labeled: true, label: 'Custom Banner' },
+            { name: 'rgbLogo', type: 'checkbox', variable: 'features.rgbLogo', labeled: true, label: 'RGB Logo' }],
+            [{ name: 'darkMode', type: 'checkbox', variable: 'features.darkMode', attributes: 'checked', labeled: true, label: 'Dark Mode' },
+            { name: 'onekoJs', type: 'checkbox', variable: 'features.onekoJs', labeled: true, label: 'onekoJs' }]
+        ]
         if (!device.apple) {
             featuresList.push(
                 [{ name: 'Custom Username', type: 'nonInput' }, { name: 'customName', type: 'text', variable: 'featureConfigs.customUsername', attributes: 'autocomplete="off"' }],
@@ -441,15 +420,192 @@ function setupMenu() {
 
 /* Main Functions */ 
 function setupMain(){
-    setupBackground();
-    spoofQuestion();
-    spoofVideo();
-    answerRevealer();
-    minuteFarm();
-    spoofUser();
-    rgbLogo();
-    changeBannerText();
-    autoAnswer();
+    function spoofQuestion() {
+        const phrases = [ 
+            "🔥 Get crunchy with Khan Doritus!", 
+            "🌶️ Spicy like Doritos!", 
+            "🧀 Cheesy good learning!"
+        ];
+        const originalFetch = window.fetch;
+        window.fetch = async function (input, init) {
+            let body;
+            if (input instanceof Request) body = await input.clone().text();
+            else if (init && init.body) body = init.body;
+            const originalResponse = await originalFetch.apply(this, arguments);
+            const clonedResponse = originalResponse.clone();
+            try {
+                const responseBody = await clonedResponse.text();
+                let responseObj = JSON.parse(responseBody);
+                if (features.questionSpoof && responseObj?.data?.assessmentItem?.item?.itemData) {
+                    let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
+                    // Hide original question content
+                    document.querySelectorAll('.perseus-renderer').forEach(el => el.style.display = 'none');
+                    
+                    // Create simplified spoof question
+                    itemData.answerArea = { 
+                        "calculator": false, 
+                        "chi2Table": false, 
+                        "periodicTable": false, 
+                        "tTable": false, 
+                        "zTable": false 
+                    }
+                    itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
+                    itemData.question.widgets = { 
+                        "radio 1": { 
+                            options: { 
+                                choices: [
+                                    { content: "Continue", correct: true }
+                                ] 
+                            } 
+                        } 
+                    };
+                    responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
+                    sendToast("🌶️ Doritus Power Activated!", 1000);
+                    return new Response(JSON.stringify(responseObj), { 
+                        status: originalResponse.status, 
+                        statusText: originalResponse.statusText, 
+                        headers: originalResponse.headers 
+                    });
+                }
+            } catch (e) { }
+            return originalResponse;
+        };
+    }
+    function spoofVideo() {
+        const originalFetch = window.fetch;
+        window.fetch = async function (input, init) {
+            let body;
+            if (input instanceof Request) body = await input.clone().text();
+            else if (init && init.body) body = init.body;
+            if (features.videoSpoof && body && body.includes('"operationName":"updateUserVideoProgress"')) {
+                try {
+                    let bodyObj = JSON.parse(body);
+                    if (bodyObj.variables && bodyObj.variables.input) {
+                        const durationSeconds = bodyObj.variables.input.durationSeconds;
+                        bodyObj.variables.input.secondsWatched = durationSeconds;
+                        bodyObj.variables.input.lastSecondWatched = durationSeconds;
+                        body = JSON.stringify(bodyObj);
+                        if (input instanceof Request) { input = new Request(input, { body: body }); } 
+                        else init.body = body; 
+                        sendToast("🔓 Vídeo exploitado.", 1000)
+                    }
+                } catch (e) { }
+            }
+            return originalFetch.apply(this, arguments);
+        };    
+    }
+    function minuteFarm() {
+        const originalFetch = window.fetch;
+        window.fetch = async function (input, init = {}) {
+            let body;
+            if (input instanceof Request) body = await input.clone().text();
+            else if (init.body) body = init.body;
+            if (features.minuteFarmer && body && input.url.includes("mark_conversions")) {
+                try {
+                    if (body.includes("termination_event")) { sendToast("🚫 Limitador de tempo bloqueado.", 1000); return; }
+                } catch (e) { }
+            }
+            return originalFetch.apply(this, arguments);
+        };
+    };
+    function spoofUser() {
+        plppdo.on('domChanged', () => {
+            if(!device.apple){
+                const pfpElement = document.querySelector('.avatar-pic');
+                const nicknameElement = document.querySelector('.user-deets.editable h2');
+                if (nicknameElement) nicknameElement.textContent = featureConfigs.customUsername || user.nickname; 
+                if (featureConfigs.customPfp && pfpElement) { Object.assign(pfpElement, { src: featureConfigs.customPfp, alt: "Not an image URL"} );pfpElement.style.borderRadius="50%"}
+            }
+        });
+    }
+    function answerRevealer() {
+        const originalParse = JSON.parse;
+        JSON.parse = function (e, t) {
+            let body = originalParse(e, t);
+            try {
+                if (body?.data) {
+                    Object.keys(body.data).forEach(key => {
+                        const data = body.data[key];
+                        if (features.showAnswers && key === "assessmentItem" && data?.item) {
+                            const itemData = JSON.parse(data.item.itemData);
+                            if (itemData.question && itemData.question.widgets && itemData.question.content[0] === itemData.question.content[0].toUpperCase()) {
+                                Object.keys(itemData.question.widgets).forEach(widgetKey => {
+                                    const widget = itemData.question.widgets[widgetKey];
+                                    if (widget.options && widget.options.choices) {
+                                        widget.options.choices.forEach(choice => {
+                                            if (choice.correct) {
+                                                choice.content = "✅ " + choice.content;
+                                                sendToast("🔓 Respostas reveladas.", 1000);                
+                                            }
+                                        });
+                                    }
+                                });
+                                data.item.itemData = JSON.stringify(itemData);
+                            }
+                        }
+                    });
+                }
+            } catch (e) { }
+            return body;
+        };
+    }
+    function rgbLogo() {
+        plppdo.on('domChanged', () => {
+            const khanLogo = document.querySelector('svg._1rt6g9t').querySelector('path:nth-last-of-type(2)');
+            const styleElement = document.createElement('style');
+            styleElement.className = "RGBLogo"
+            styleElement.textContent = `
+                @keyframes colorShift {
+                    0% { fill: rgb(255, 0, 0); }
+                    33% { fill: rgb(0, 255, 0); }
+                    66% { fill: rgb(0, 0, 255); }
+                    100% { fill: rgb(255, 0, 0); }
+                }   
+            `;
+            if(features.rgbLogo&&khanLogo){
+                if(!document.getElementsByClassName('RGBLogo')[0]) document.head.appendChild(styleElement);
+                if(khanLogo.getAttribute('data-darkreader-inline-fill')!=null) khanLogo.removeAttribute('data-darkreader-inline-fill');
+                khanLogo.style.animation = 'colorShift 5s infinite';
+            }
+        })
+    }
+    function changeBannerText() {
+        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[🌿] Get good get Khanware!", "[🌿] the old khanware.space" ];
+        setInterval(() => { 
+            const greeting = document.querySelector('.stp-animated-banner h2');
+            if (greeting&&features.customBanner) greeting.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+        }, 3000);
+    }
+    async function autoAnswer() {
+        const baseClasses = ["_1tuo6xk", "_ssxvf9l", "_1f0fvyce", "_rz7ls7u", "_1yok8f4", "_1e5cuk2a"];
+        while (true) {
+            if(features.autoAnswer&&features.questionSpoof){
+                const classToCheck = [...baseClasses];
+                if (features.nextRecomendation) { 
+                    device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); 
+                }
+                if (features.repeatQuestion) {
+                    classToCheck.push("_1abyu0ga");
+                    // After clicking repeat question, uncheck the checkbox
+                    const repeatCheckbox = document.querySelector('[setting-data="features.repeatQuestion"]');
+                    if (repeatCheckbox) {
+                        repeatCheckbox.checked = false;
+                        features.repeatQuestion = false;
+                    }
+                }
+                classToCheck.forEach(async (q) => {
+                    findAndClickByClass(q);
+                    const element = document.getElementsByClassName(q)[0];
+                    if(element&&element.textContent=='Mostrar resumo') { 
+                        sendToast("🌶️ Doritus crunch complete!", 3000); 
+                        playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); 
+                    }
+                });
+            }
+            await delay(featureConfigs.autoAnswerDelay*750);
+        }
+    }
+    spoofQuestion(); spoofVideo(); answerRevealer(); minuteFarm(); spoofUser(); rgbLogo(); changeBannerText(); autoAnswer();
 }
 
 /* Inject */
@@ -463,7 +619,12 @@ loadScript('https://raw.githubusercontent.com/adryd325/oneko.js/refs/heads/main/
     onekoEl.style.backgroundImage = "url('https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif')";
     onekoEl.style.display = "none";
 });
-loadScript('https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css', 'toastifyCss');
+loadScript('https://cdn.jsdelivr.net/npm/darkreader@4.9.92/darkreader.min.js', 'darkReaderPlugin')
+.then(()=>{
+    DarkReader.setFetchMethod(window.fetch)
+    DarkReader.enable();
+})
+loadCss('https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css', 'toastifyCss');
 loadScript('https://cdn.jsdelivr.net/npm/toastify-js', 'toastifyPlugin')
 .then(async () => {
     sendToast("🌿 Khanware injetado com sucesso!");
