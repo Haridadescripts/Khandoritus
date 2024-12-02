@@ -221,73 +221,162 @@ function setupMenu() {
             position: 'absolute',
             top: '100%',
             left: '0',
-            width: '160px',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            borderRadius: '10px',
+            width: '180px',
+            backgroundColor: 'rgba(20, 20, 20, 0.95)',
+            borderRadius: '12px',
             color: 'white',
             fontSize: '13px',
-            fontFamily: 'Monospace, sans-serif',
+            fontFamily: 'Arial, sans-serif',
             display: 'none',
             flexDirection: 'column',
             zIndex: '1000',
-            padding: '5px',
+            padding: '10px',
             cursor: 'default',
             userSelect: 'none',
             transition: 'none',
-            backdropFilter: 'blur(2px)',
-            WebkitBackdropFilter: 'blur(2px)',
-            border: '1px solid #FF4500',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 69, 0, 0.2)',
             pointerEvents: 'auto',
-            boxShadow: '0 0 10px rgba(255, 69, 0, 0.3)'
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
         });
+
         dropdownMenu.innerHTML = `
             <style>
+                /* Estilo dos grupos de opções */
+                .option-group {
+                    margin-bottom: 8px;
+                    padding: 8px;
+                    border-radius: 8px;
+                    background: rgba(255, 69, 0, 0.05);
+                }
+
+                /* Estilo dos checkboxes */
                 input[type="checkbox"] {
-                    appearance: none; 
-                    width: 15px; 
-                    height: 15px; 
-                    background-color: #2a2a2a;
-                    border: 1px solid #FF4500; 
-                    border-radius: 3px; 
-                    margin-right: 5px; 
+                    appearance: none;
+                    width: 40px;
+                    height: 20px;
+                    background-color: rgba(255, 255, 255, 0.1);
+                    border-radius: 20px;
+                    position: relative;
                     cursor: pointer;
+                    transition: all 0.3s ease;
+                    border: none;
+                    margin-right: 8px;
                 }
+
+                input[type="checkbox"]::before {
+                    content: '';
+                    position: absolute;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    top: 2px;
+                    left: 2px;
+                    background: white;
+                    transition: all 0.3s ease;
+                }
+
                 input[type="checkbox"]:checked {
-                    background-color: #FF4500; 
-                    border-color: #FF8C00;
+                    background-color: #FF4500;
                 }
-                input[type="text"], input[type="number"], input[type="range"] {
-                    width: calc(100% - 10px); 
-                    border: 1px solid #FF4500; 
-                    color: white; 
-                    accent-color: #FF4500; 
-                    background: rgba(0, 0, 0, 0.5);
-                    padding: 3px; 
-                    border-radius: 3px;
+
+                input[type="checkbox"]:checked::before {
+                    transform: translateX(20px);
                 }
+
+                /* Estilo dos inputs de texto */
+                input[type="text"], input[type="number"] {
+                    width: calc(100% - 16px);
+                    padding: 8px;
+                    border: 1px solid rgba(255, 69, 0, 0.3);
+                    border-radius: 6px;
+                    background: rgba(30, 30, 30, 0.9);
+                    color: white;
+                    font-size: 12px;
+                    transition: all 0.3s ease;
+                    margin-top: 4px;
+                }
+
+                input[type="text"]:focus, input[type="number"]:focus {
+                    border-color: #FF4500;
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.2);
+                }
+
+                /* Estilo do slider */
+                input[type="range"] {
+                    -webkit-appearance: none;
+                    width: 100%;
+                    height: 4px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 2px;
+                    margin: 10px 0;
+                }
+
+                input[type="range"]::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    width: 16px;
+                    height: 16px;
+                    background: #FF4500;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                input[type="range"]::-webkit-slider-thumb:hover {
+                    transform: scale(1.1);
+                }
+
+                /* Estilo das labels */
                 label {
-                    display: flex; 
-                    align-items: center; 
-                    color: #ffffff; 
-                    padding-top: 3px;
+                    display: flex;
+                    align-items: center;
+                    color: rgba(255, 255, 255, 0.9);
+                    padding: 6px 0;
+                    font-size: 12px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                }
+
+                label:hover {
+                    color: #FF4500;
+                }
+
+                /* Estilo dos títulos das seções */
+                .section-title {
+                    color: #FF4500;
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    margin-bottom: 6px;
+                    font-weight: bold;
+                }
+
+                /* Divisor entre seções */
+                .divider {
+                    height: 1px;
+                    background: rgba(255, 69, 0, 0.2);
+                    margin: 8px 0;
                 }
             </style>
         `;
-        watermark.appendChild(dropdownMenu);
+
+        // Adicione classes para agrupar opções relacionadas
         let featuresList = [
-            [{ name: 'questionSpoof', type: 'checkbox', variable: 'features.questionSpoof', attributes: 'checked', labeled: true, label: 'Question Spoof' },
-            { name: 'videoSpoof', type: 'checkbox', variable: 'features.videoSpoof', attributes: 'checked', labeled: true, label: 'Video Spoof' },
-            { name: 'showAnswers', type: 'checkbox', variable: 'features.showAnswers', labeled: true, label: 'Answer Revealer' }],
-            [{ name: 'autoAnswer', type: 'checkbox', variable: 'features.autoAnswer', dependent: 'autoAnswerDelay,nextRecomendation,repeatQuestion', labeled: true, label: 'Auto Answer' },
-            { name: 'repeatQuestion', className: 'repeatQuestion', type: 'checkbox', variable: 'features.repeatQuestion', attributes: 'style="display:none;"', labeled: true, label: 'Repeat Question' },
-            { name: 'nextRecomendation', className: 'nextRecomendation', type: 'checkbox', variable: 'features.nextRecomendation', attributes: 'style="display:none;"', labeled: true, label: 'Recomendations' },
-            { name: 'autoAnswerDelay', className: 'autoAnswerDelay', type: 'range', variable: 'features.autoAnswerDelay', attributes: 'style="display:none;" min="1" max="3" value="1"', labeled: false }],
-            [{ name: 'minuteFarm', type: 'checkbox', variable: 'features.minuteFarmer', labeled: true, label: 'Minute Farmer' },
-            { name: 'customBanner', type: 'checkbox', variable: 'features.customBanner', labeled: true, label: 'Custom Banner' },
-            { name: 'rgbLogo', type: 'checkbox', variable: 'features.rgbLogo', labeled: true, label: 'RGB Logo' }],
-            [{ name: 'darkMode', type: 'checkbox', variable: 'features.darkMode', attributes: 'checked', labeled: true, label: 'Dark Mode' },
-            { name: 'onekoJs', type: 'checkbox', variable: 'features.onekoJs', labeled: true, label: 'onekoJs' }]
-        ]
+            [{ type: 'title', text: 'QUESTÕES' }],
+            [{ name: 'questionSpoof', type: 'checkbox', variable: 'features.questionSpoof', attributes: 'checked', labeled: true, label: 'Pular Questões' },
+            { name: 'showAnswers', type: 'checkbox', variable: 'features.showAnswers', labeled: true, label: 'Mostrar Respostas' }],
+            [{ type: 'divider' }],
+            [{ type: 'title', text: 'AUTOMAÇÃO' }],
+            [{ name: 'autoAnswer', type: 'checkbox', variable: 'features.autoAnswer', dependent: 'autoAnswerDelay,nextRecomendation,repeatQuestion', labeled: true, label: 'Auto Responder' },
+            { name: 'videoSpoof', type: 'checkbox', variable: 'features.videoSpoof', attributes: 'checked', labeled: true, label: 'Pular Vídeos' }],
+            [{ type: 'divider' }],
+            [{ type: 'title', text: 'VISUAL' }],
+            [{ name: 'customBanner', type: 'checkbox', variable: 'features.customBanner', labeled: true, label: 'Banner Personalizado' },
+            { name: 'rgbLogo', type: 'checkbox', variable: 'features.rgbLogo', labeled: true, label: 'Logo RGB' }]
+        ];
+
         if (!device.apple) {
             featuresList.push(
                 [{ name: 'Custom Username', type: 'nonInput' }, { name: 'customName', type: 'text', variable: 'featureConfigs.customUsername', attributes: 'autocomplete="off"' }],
