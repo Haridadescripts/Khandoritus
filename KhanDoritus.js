@@ -247,7 +247,6 @@ function setupMenu() {
 /* Main Functions */ 
 function setupMain(){
     function spoofQuestion() {
-        const phrases = [ "🔥 Get good, get [Khanware](https://github.com/Niximkk/khanware/)!", "🤍 Made by [@im.nix](https://e-z.bio/sounix).", "☄️ By github.com/Niximkk/khanware/ " ];
         const originalFetch = window.fetch;
         window.fetch = async function (input, init) {
             let body;
@@ -262,11 +261,24 @@ function setupMain(){
                     let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
                     if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
                         itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
-                        itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
-                        itemData.question.widgets = { "radio 1": { options: { choices: [ { content: "Resposta correta.", correct: true }, { content: "Resposta incorreta.", correct: false } ] } } };
+                        itemData.question.content = "Selecione a resposta correta" + `[[☃ radio 1]]`;
+                        itemData.question.widgets = { 
+                            "radio 1": { 
+                                options: { 
+                                    choices: [
+                                        { content: "Resposta correta", correct: true },
+                                        { content: "Resposta falsa", correct: false }
+                                    ]
+                                }
+                            }
+                        };
                         responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                        sendToast("🔓 Questão exploitada.", 1000);
-                        return new Response(JSON.stringify(responseObj), { status: originalResponse.status, statusText: originalResponse.statusText, headers: originalResponse.headers });
+                        sendToast("🔓 Questão modificada", 1000);
+                        return new Response(JSON.stringify(responseObj), { 
+                            status: originalResponse.status, 
+                            statusText: originalResponse.statusText, 
+                            headers: originalResponse.headers 
+                        });
                     }
                 }
             } catch (e) { }
@@ -383,12 +395,20 @@ function setupMain(){
         
         while (true) {
             if(features.autoAnswer && features.questionSpoof) {
-                // Clica no botão com a classe específica
+                // Primeiro clica na resposta correta
+                const correctAnswer = document.querySelector('div[data-test-correct="true"]');
+                if(correctAnswer) {
+                    correctAnswer.click();
+                    sendToast("✅ Resposta correta selecionada", 1000);
+                    await delay(500);
+                }
+
+                // Depois clica no botão de próximo
                 const targetButton = document.querySelector(`.${targetButtonClass}[aria-disabled="false"]`);
                 if(targetButton) {
                     targetButton.click();
-                    sendToast("🔘 Botão pressionado", 1000);
-                    await delay(500); // Pequeno delay entre cliques
+                    sendToast("⏭️ Próxima questão", 1000);
+                    await delay(500);
                 }
             }
             await delay(featureConfigs.autoAnswerDelay * 750);
