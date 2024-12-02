@@ -430,7 +430,7 @@ function setupMain(){
                     await delay(1000); // Delay de 1 segundo antes de clicar
                     targetButton.click();
                     sendToast("🔘 Botão pressionado", 1000);
-                    await delay(500);
+                    await delay(2000); // Aumentado para 2 segundos para dar tempo de processar a resposta
                 }
 
                 // Clica no botão próximo
