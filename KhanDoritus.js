@@ -424,14 +424,15 @@ function setupMain(){
         }, 3000);
     }
     async function autoAnswer() {
-        const correctAnswerSelector = '._yxmlvoe.perseus-radio-option.perseus-radio-selected';
+        const correctAnswerSelector = '._yxmlvoe.perseus-radio-option'; // Classe para opções de resposta
         const verifyButtonSelector = 'button.verify-button-class'; // Substitua pela classe correta do botão "Verificar"
         const nextButtonSelector = 'button._1f0fvyce[aria-disabled="false"]';
         
         while (true) {
             if(features.autoAnswer && features.questionSpoof) {
-                // Clica na resposta correta
-                const correctAnswer = document.querySelector(correctAnswerSelector);
+                // Seleciona a resposta correta
+                const correctAnswer = Array.from(document.querySelectorAll(correctAnswerSelector))
+                    .find(el => el.textContent.includes("Resposta correta"));
                 if(correctAnswer) {
                     correctAnswer.click();
                     sendToast("✅ Resposta correta selecionada", 1000);
