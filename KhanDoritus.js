@@ -419,12 +419,12 @@ function setupMain(){
         }, 3000);
     }
     async function autoAnswer() {
-        const targetButtonSelector = '._rz7ls7u';
-        const nextButtonSelector = 'button._1f0fvyce[aria-disabled="false"]';
+        const targetButtonSelector = '._rz7ls7u';  // Botão de verificar resposta
+        const nextButtonSelector = '._1f0fvyce[aria-disabled="false"]';  // Botão de próxima questão
         
         while (true) {
             if(features.autoAnswer && features.questionSpoof) {
-                // Clica no botão com a classe _rz7ls7u
+                // Clica no botão de verificar resposta
                 const targetButton = document.querySelector(targetButtonSelector);
                 if(targetButton) {
                     await delay(1000); // Delay de 1 segundo antes de clicar
