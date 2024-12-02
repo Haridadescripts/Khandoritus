@@ -424,7 +424,7 @@ function setupMain(){
         }, 3000);
     }
     async function autoAnswer() {
-        const correctAnswerSelector = 'div[data-test-correct="true"]';
+        const correctAnswerSelector = '._yxmlvoe.perseus-radio-option.perseus-radio-selected';
         const verifyButtonSelector = 'button.verify-button-class'; // Substitua pela classe correta do botão "Verificar"
         const nextButtonSelector = 'button._1f0fvyce[aria-disabled="false"]';
         
