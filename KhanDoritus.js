@@ -427,6 +427,7 @@ function setupMain(){
                 // Clica no botão com a classe _rz7ls7u
                 const targetButton = document.querySelector(targetButtonSelector);
                 if(targetButton) {
+                    await delay(1000); // Delay de 1 segundo antes de clicar
                     targetButton.click();
                     sendToast("🔘 Botão pressionado", 1000);
                     await delay(500);
