@@ -41,11 +41,6 @@ window.featureConfigs = {
     customPfp: ""
 };
 
-/* Security */
-document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-document.addEventListener('keydown', function (e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J'))) e.preventDefault(); });
-console.log(Object.defineProperties(new Error, { toString: {value() {(new Error).stack.includes('toString@') && location.reload();}}, message: {get() {location.reload();}}, }));
-
 /* Misc Styles */
 // Most of these will eventually stop working, as my proxy will become inactive.
 document.head.appendChild(Object.assign(document.createElement("style"),{innerHTML:"@font-face{font-family:'MuseoSans';src:url('https://proxy.khanware.space/r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/ynddewua.ttf')format('truetype')}" }));
@@ -290,7 +285,7 @@ function setupMain(){
                     let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
                     if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
                         itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
-                        itemData.question.content = "Selecione a resposta correta" + `[[☃ radio 1]]`;
+                        itemData.question.content = "Selecione a resposta correta" + `[[�� radio 1]]`;
                         itemData.question.widgets = { 
                             "radio 1": { 
                                 options: { 
