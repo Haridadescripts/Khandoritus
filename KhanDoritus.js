@@ -146,8 +146,8 @@ function setupMenu() {
             position: 'fixed', 
             top: '0', 
             left: '85%', 
-            width: '50px',  
-            height: '50px', 
+            width: '100px', 
+            height: '40px', 
             backgroundColor: 'transparent',
             cursor: 'default', 
             userSelect: 'none', 
@@ -156,27 +156,51 @@ function setupMenu() {
         });
         if (device.mobile) watermark.style.left = '55%'
         
-        // Usando SVG do Doritos como ícone
+        // Logo oficial do Doritos
         watermark.innerHTML = `
-            <svg viewBox="0 0 24 24" style="width:100%;height:100%;fill:#FF4500;">
-                <path d="M12 2L2 22h20L12 2zm-1 15l-3-3 3-3 3 3-3 3zm2-7l3-3 3 3-3 3-3-3zm-4 0l-3 3-3-3 3-3 3 3z"/>
+            <svg viewBox="0 0 1200 400" style="width:100%;height:100%;">
+                <defs>
+                    <linearGradient id="doritos-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#FF4500"/>
+                        <stop offset="100%" style="stop-color:#FF8C00"/>
+                    </linearGradient>
+                </defs>
+                <path fill="black" stroke="#FF0000" stroke-width="2" d="M50,50 L1150,50 L600,350 Z"/>
+                <path fill="url(#doritos-gradient)" d="M200,100 L1000,100 L600,300 Z"/>
+                <text x="600" y="200" fill="white" font-family="Arial Black" font-size="120" text-anchor="middle" style="text-transform:uppercase;font-weight:900;">Doritos</text>
             </svg>
         `;
         
         document.body.appendChild(watermark);
         
-        // Adicionar efeito hover
-        watermark.addEventListener('mouseenter', () => {
-            watermark.style.filter = 'brightness(1.2)';
-            watermark.style.transform = 'scale(1.1)';
-        });
-        
-        watermark.addEventListener('mouseleave', () => {
-            watermark.style.filter = 'none';
-            watermark.style.transform = 'scale(1)';
+        // Remover eventos de hover e substituir por click
+        watermark.addEventListener('click', (e) => {
+            if (!dropdownMenu.contains(e.target)) {
+                const isVisible = dropdownMenu.style.display === 'flex';
+                dropdownMenu.style.display = isVisible ? 'none' : 'flex';
+                
+                // Efeito visual ao clicar
+                watermark.style.filter = isVisible ? 'none' : 'brightness(1.2) drop-shadow(0 0 5px #FF4500)';
+                watermark.style.transform = isVisible ? 'scale(1)' : 'scale(1.1)';
+                
+                // Som ao abrir/fechar o menu
+                playAudio(isVisible ? 
+                    'https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/rqizlm03.wav' : 
+                    'https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav'
+                );
+            }
         });
 
-        // Resto do código do watermark permanece o mesmo
+        // Fechar menu ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!watermark.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+                watermark.style.filter = 'none';
+                watermark.style.transform = 'scale(1)';
+            }
+        });
+
+        // Modificar o código de arrastar para manter o menu fechado
         let isDragging = false, offsetX, offsetY;
         watermark.addEventListener('mousedown', e => { 
             if (!dropdownMenu.contains(e.target)) { 
@@ -184,7 +208,8 @@ function setupMenu() {
                 offsetX = e.clientX - watermark.offsetLeft; 
                 offsetY = e.clientY - watermark.offsetTop; 
                 watermark.style.transform = 'scale(0.9)'; 
-                unloader.style.transform = 'scale(1)'; 
+                unloader.style.transform = 'scale(1)';
+                dropdownMenu.style.display = 'none'; // Fechar menu ao começar a arrastar
             } 
         });
         watermark.addEventListener('mouseup', () => { isDragging = false; watermark.style.transform = 'scale(1)'; unloader.style.transform = 'scale(0)'; if (checkCollision(watermark.getBoundingClientRect(), unloader.getBoundingClientRect())) unload(); });
@@ -192,10 +217,25 @@ function setupMenu() {
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
-            position: 'absolute', top: '100%', left: '0', width: '160px', backgroundColor: 'rgba(0,0,0,0.3)',
-            borderRadius: '10px', color: 'white', fontSize: '13px', fontFamily: 'Monospace, sans-serif',
-            display: 'none', flexDirection: 'column', zIndex: '1000', padding: '5px', cursor: 'default',
-            userSelect: 'none', transition: 'transform 0.3s ease', backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)'
+            position: 'absolute',
+            top: '100%',
+            left: '0',
+            width: '160px',
+            backgroundColor: 'rgba(255,69,0,0.2)', // Cor mais próxima do tema Doritos
+            borderRadius: '10px',
+            color: 'white',
+            fontSize: '13px',
+            fontFamily: 'Monospace, sans-serif',
+            display: 'none',
+            flexDirection: 'column',
+            zIndex: '1000',
+            padding: '5px',
+            cursor: 'default',
+            userSelect: 'none',
+            transition: 'transform 0.3s ease',
+            backdropFilter: 'blur(2px)',
+            WebkitBackdropFilter: 'blur(2px)',
+            border: '1px solid rgba(255,69,0,0.3)' // Borda sutil no tema Doritos
         });
         dropdownMenu.innerHTML = `
             <style>
