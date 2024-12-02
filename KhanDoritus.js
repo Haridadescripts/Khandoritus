@@ -222,7 +222,7 @@ function setupMenu() {
             top: '100%',
             left: '0',
             width: '160px',
-            backgroundColor: 'rgba(255,69,0,0.2)',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
             borderRadius: '10px',
             color: 'white',
             fontSize: '13px',
@@ -236,17 +236,41 @@ function setupMenu() {
             transition: 'none',
             backdropFilter: 'blur(2px)',
             WebkitBackdropFilter: 'blur(2px)',
-            border: '1px solid rgba(255,69,0,0.3)',
-            pointerEvents: 'auto'
+            border: '1px solid #FF4500',
+            pointerEvents: 'auto',
+            boxShadow: '0 0 10px rgba(255, 69, 0, 0.3)'
         });
         dropdownMenu.innerHTML = `
             <style>
-                input[type="checkbox"] {appearance: none; width: 15px; height: 15px; background-color: #3a3a3b;
-                border: 1px solid #acacac; border-radius: 3px; margin-right: 5px; cursor: pointer;}
-                input[type="checkbox"]:checked {background-color: #540b8a; border-color: #720fb8;}
-                input[type="text"], input[type="number"], input[type="range"] {width: calc(100% - 10px); border: 1px solid #343434; 
-                color: white; accent-color: #540b8a; background-color: #540b8a; padding: 3px; border-radius: 3px; background: none;}
-                label {display: flex; align-items: center; color: #3a3a3b; padding-top: 3px;}
+                input[type="checkbox"] {
+                    appearance: none; 
+                    width: 15px; 
+                    height: 15px; 
+                    background-color: #2a2a2a;
+                    border: 1px solid #FF4500; 
+                    border-radius: 3px; 
+                    margin-right: 5px; 
+                    cursor: pointer;
+                }
+                input[type="checkbox"]:checked {
+                    background-color: #FF4500; 
+                    border-color: #FF8C00;
+                }
+                input[type="text"], input[type="number"], input[type="range"] {
+                    width: calc(100% - 10px); 
+                    border: 1px solid #FF4500; 
+                    color: white; 
+                    accent-color: #FF4500; 
+                    background: rgba(0, 0, 0, 0.5);
+                    padding: 3px; 
+                    border-radius: 3px;
+                }
+                label {
+                    display: flex; 
+                    align-items: center; 
+                    color: #ffffff; 
+                    padding-top: 3px;
+                }
             </style>
         `;
         watermark.appendChild(dropdownMenu);
@@ -328,192 +352,15 @@ function setupMenu() {
 
 /* Main Functions */ 
 function setupMain(){
-    function spoofQuestion() {
-        const phrases = [ 
-            "🔥 Get crunchy with Khan Doritus!", 
-            "🌶️ Spicy like Doritos!", 
-            "🧀 Cheesy good learning!"
-        ];
-        const originalFetch = window.fetch;
-        window.fetch = async function (input, init) {
-            let body;
-            if (input instanceof Request) body = await input.clone().text();
-            else if (init && init.body) body = init.body;
-            const originalResponse = await originalFetch.apply(this, arguments);
-            const clonedResponse = originalResponse.clone();
-            try {
-                const responseBody = await clonedResponse.text();
-                let responseObj = JSON.parse(responseBody);
-                if (features.questionSpoof && responseObj?.data?.assessmentItem?.item?.itemData) {
-                    let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
-                    // Hide original question content
-                    document.querySelectorAll('.perseus-renderer').forEach(el => el.style.display = 'none');
-                    
-                    // Create simplified spoof question
-                    itemData.answerArea = { 
-                        "calculator": false, 
-                        "chi2Table": false, 
-                        "periodicTable": false, 
-                        "tTable": false, 
-                        "zTable": false 
-                    }
-                    itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
-                    itemData.question.widgets = { 
-                        "radio 1": { 
-                            options: { 
-                                choices: [
-                                    { content: "Continue", correct: true }
-                                ] 
-                            } 
-                        } 
-                    };
-                    responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                    sendToast("🌶️ Doritus Power Activated!", 1000);
-                    return new Response(JSON.stringify(responseObj), { 
-                        status: originalResponse.status, 
-                        statusText: originalResponse.statusText, 
-                        headers: originalResponse.headers 
-                    });
-                }
-            } catch (e) { }
-            return originalResponse;
-        };
-    }
-    function spoofVideo() {
-        const originalFetch = window.fetch;
-        window.fetch = async function (input, init) {
-            let body;
-            if (input instanceof Request) body = await input.clone().text();
-            else if (init && init.body) body = init.body;
-            if (features.videoSpoof && body && body.includes('"operationName":"updateUserVideoProgress"')) {
-                try {
-                    let bodyObj = JSON.parse(body);
-                    if (bodyObj.variables && bodyObj.variables.input) {
-                        const durationSeconds = bodyObj.variables.input.durationSeconds;
-                        bodyObj.variables.input.secondsWatched = durationSeconds;
-                        bodyObj.variables.input.lastSecondWatched = durationSeconds;
-                        body = JSON.stringify(bodyObj);
-                        if (input instanceof Request) { input = new Request(input, { body: body }); } 
-                        else init.body = body; 
-                        sendToast("🔓 Vídeo exploitado.", 1000)
-                    }
-                } catch (e) { }
-            }
-            return originalFetch.apply(this, arguments);
-        };    
-    }
-    function minuteFarm() {
-        const originalFetch = window.fetch;
-        window.fetch = async function (input, init = {}) {
-            let body;
-            if (input instanceof Request) body = await input.clone().text();
-            else if (init.body) body = init.body;
-            if (features.minuteFarmer && body && input.url.includes("mark_conversions")) {
-                try {
-                    if (body.includes("termination_event")) { sendToast("🚫 Limitador de tempo bloqueado.", 1000); return; }
-                } catch (e) { }
-            }
-            return originalFetch.apply(this, arguments);
-        };
-    };
-    function spoofUser() {
-        plppdo.on('domChanged', () => {
-            if(!device.apple){
-                const pfpElement = document.querySelector('.avatar-pic');
-                const nicknameElement = document.querySelector('.user-deets.editable h2');
-                if (nicknameElement) nicknameElement.textContent = featureConfigs.customUsername || user.nickname; 
-                if (featureConfigs.customPfp && pfpElement) { Object.assign(pfpElement, { src: featureConfigs.customPfp, alt: "Not an image URL"} );pfpElement.style.borderRadius="50%"}
-            }
-        });
-    }
-    function answerRevealer() {
-        const originalParse = JSON.parse;
-        JSON.parse = function (e, t) {
-            let body = originalParse(e, t);
-            try {
-                if (body?.data) {
-                    Object.keys(body.data).forEach(key => {
-                        const data = body.data[key];
-                        if (features.showAnswers && key === "assessmentItem" && data?.item) {
-                            const itemData = JSON.parse(data.item.itemData);
-                            if (itemData.question && itemData.question.widgets && itemData.question.content[0] === itemData.question.content[0].toUpperCase()) {
-                                Object.keys(itemData.question.widgets).forEach(widgetKey => {
-                                    const widget = itemData.question.widgets[widgetKey];
-                                    if (widget.options && widget.options.choices) {
-                                        widget.options.choices.forEach(choice => {
-                                            if (choice.correct) {
-                                                choice.content = "✅ " + choice.content;
-                                                sendToast("🔓 Respostas reveladas.", 1000);                
-                                            }
-                                        });
-                                    }
-                                });
-                                data.item.itemData = JSON.stringify(itemData);
-                            }
-                        }
-                    });
-                }
-            } catch (e) { }
-            return body;
-        };
-    }
-    function rgbLogo() {
-        plppdo.on('domChanged', () => {
-            const khanLogo = document.querySelector('svg._1rt6g9t').querySelector('path:nth-last-of-type(2)');
-            const styleElement = document.createElement('style');
-            styleElement.className = "RGBLogo"
-            styleElement.textContent = `
-                @keyframes colorShift {
-                    0% { fill: rgb(255, 0, 0); }
-                    33% { fill: rgb(0, 255, 0); }
-                    66% { fill: rgb(0, 0, 255); }
-                    100% { fill: rgb(255, 0, 0); }
-                }   
-            `;
-            if(features.rgbLogo&&khanLogo){
-                if(!document.getElementsByClassName('RGBLogo')[0]) document.head.appendChild(styleElement);
-                if(khanLogo.getAttribute('data-darkreader-inline-fill')!=null) khanLogo.removeAttribute('data-darkreader-inline-fill');
-                khanLogo.style.animation = 'colorShift 5s infinite';
-            }
-        })
-    }
-    function changeBannerText() {
-        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[🌿] Get good get Khanware!", "[🌿] the old khanware.space" ];
-        setInterval(() => { 
-            const greeting = document.querySelector('.stp-animated-banner h2');
-            if (greeting&&features.customBanner) greeting.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-        }, 3000);
-    }
-    async function autoAnswer() {
-        const baseClasses = ["_1tuo6xk", "_ssxvf9l", "_1f0fvyce", "_rz7ls7u", "_1yok8f4", "_1e5cuk2a"];
-        while (true) {
-            if(features.autoAnswer&&features.questionSpoof){
-                const classToCheck = [...baseClasses];
-                if (features.nextRecomendation) { 
-                    device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); 
-                }
-                if (features.repeatQuestion) {
-                    classToCheck.push("_1abyu0ga");
-                    // After clicking repeat question, uncheck the checkbox
-                    const repeatCheckbox = document.querySelector('[setting-data="features.repeatQuestion"]');
-                    if (repeatCheckbox) {
-                        repeatCheckbox.checked = false;
-                        features.repeatQuestion = false;
-                    }
-                }
-                classToCheck.forEach(async (q) => {
-                    findAndClickByClass(q);
-                    const element = document.getElementsByClassName(q)[0];
-                    if(element&&element.textContent=='Mostrar resumo') { 
-                        sendToast("🌶️ Doritus crunch complete!", 3000); 
-                        playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); 
-                    }
-                });
-            }
-            await delay(featureConfigs.autoAnswerDelay*750);
-        }
-    }
-    spoofQuestion(); spoofVideo(); answerRevealer(); minuteFarm(); spoofUser(); rgbLogo(); changeBannerText(); autoAnswer();
+    setupBackground();
+    spoofQuestion();
+    spoofVideo();
+    answerRevealer();
+    minuteFarm();
+    spoofUser();
+    rgbLogo();
+    changeBannerText();
+    autoAnswer();
 }
 
 /* Inject */
@@ -527,12 +374,7 @@ loadScript('https://raw.githubusercontent.com/adryd325/oneko.js/refs/heads/main/
     onekoEl.style.backgroundImage = "url('https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif')";
     onekoEl.style.display = "none";
 });
-loadScript('https://cdn.jsdelivr.net/npm/darkreader@4.9.92/darkreader.min.js', 'darkReaderPlugin')
-.then(()=>{
-    DarkReader.setFetchMethod(window.fetch)
-    DarkReader.enable();
-})
-loadCss('https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css', 'toastifyCss');
+loadScript('https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css', 'toastifyCss');
 loadScript('https://cdn.jsdelivr.net/npm/toastify-js', 'toastifyPlugin')
 .then(async () => {
     sendToast("🌿 Khanware injetado com sucesso!");
