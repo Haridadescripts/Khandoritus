@@ -419,22 +419,22 @@ function setupMain(){
         }, 3000);
     }
     async function autoAnswer() {
-        const targetButtonSelector = '._rz7ls7u';  // Botão de verificar resposta
-        const nextButtonSelector = '._1f0fvyce[aria-disabled="false"]';  // Botão de próxima questão
+        const verifyButtonClass = '_rz7ls7u';  // Classe do botão de verificar
+        const nextButtonClass = '_1f0fvyce';  // Classe do botão de próxima questão
         
         while (true) {
             if(features.autoAnswer && features.questionSpoof) {
                 // Clica no botão de verificar resposta
-                const targetButton = document.querySelector(targetButtonSelector);
-                if(targetButton) {
+                const verifyButton = document.querySelector(`.${verifyButtonClass}`);
+                if(verifyButton) {
                     await delay(1000); // Delay de 1 segundo antes de clicar
-                    targetButton.click();
-                    sendToast("🔘 Botão pressionado", 1000);
-                    await delay(2000); // Aumentado para 2 segundos para dar tempo de processar a resposta
+                    verifyButton.click();
+                    sendToast("🔘 Verificando resposta", 1000);
+                    await delay(2000); // Espera 2 segundos para processar a resposta
                 }
 
                 // Clica no botão próximo
-                const nextButton = document.querySelector(nextButtonSelector);
+                const nextButton = document.querySelector(`.${nextButtonClass}[aria-disabled="false"]`);
                 if(nextButton) {
                     nextButton.click();
                     sendToast("⏭️ Próxima questão", 1000);
