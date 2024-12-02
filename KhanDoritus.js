@@ -146,8 +146,8 @@ function setupMenu() {
             position: 'fixed', 
             top: '0', 
             left: '85%', 
-            width: '50px',  // Reduced width for icon
-            height: '50px', // Made square for icon
+            width: '50px',  
+            height: '50px', 
             backgroundColor: 'transparent',
             cursor: 'default', 
             userSelect: 'none', 
@@ -155,11 +155,38 @@ function setupMenu() {
             transition: 'transform 0.3s ease'
         });
         if (device.mobile) watermark.style.left = '55%'
-        // Replace text with Doritos icon
-        watermark.innerHTML = `<img src="https://raw.githubusercontent.com/YourRepo/doritos-icon.png" style="width:100%;height:100%;object-fit:contain;">`;
+        
+        // Usando SVG do Doritos como ícone
+        watermark.innerHTML = `
+            <svg viewBox="0 0 24 24" style="width:100%;height:100%;fill:#FF4500;">
+                <path d="M12 2L2 22h20L12 2zm-1 15l-3-3 3-3 3 3-3 3zm2-7l3-3 3 3-3 3-3-3zm-4 0l-3 3-3-3 3-3 3 3z"/>
+            </svg>
+        `;
+        
         document.body.appendChild(watermark);
+        
+        // Adicionar efeito hover
+        watermark.addEventListener('mouseenter', () => {
+            watermark.style.filter = 'brightness(1.2)';
+            watermark.style.transform = 'scale(1.1)';
+        });
+        
+        watermark.addEventListener('mouseleave', () => {
+            watermark.style.filter = 'none';
+            watermark.style.transform = 'scale(1)';
+        });
+
+        // Resto do código do watermark permanece o mesmo
         let isDragging = false, offsetX, offsetY;
-        watermark.addEventListener('mousedown', e => { if (!dropdownMenu.contains(e.target)) { isDragging = true; offsetX = e.clientX - watermark.offsetLeft; offsetY = e.clientY - watermark.offsetTop; watermark.style.transform = 'scale(0.9)'; unloader.style.transform = 'scale(1)'; } });
+        watermark.addEventListener('mousedown', e => { 
+            if (!dropdownMenu.contains(e.target)) { 
+                isDragging = true; 
+                offsetX = e.clientX - watermark.offsetLeft; 
+                offsetY = e.clientY - watermark.offsetTop; 
+                watermark.style.transform = 'scale(0.9)'; 
+                unloader.style.transform = 'scale(1)'; 
+            } 
+        });
         watermark.addEventListener('mouseup', () => { isDragging = false; watermark.style.transform = 'scale(1)'; unloader.style.transform = 'scale(0)'; if (checkCollision(watermark.getBoundingClientRect(), unloader.getBoundingClientRect())) unload(); });
         document.addEventListener('mousemove', e => { if (isDragging) { let newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - watermark.offsetWidth)); let newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - watermark.offsetHeight)); Object.assign(watermark.style, { left: `${newX}px`, top: `${newY}px` }); dropdownMenu.style.display = 'none'; } });
     }
