@@ -547,3 +547,27 @@ loadScript('https://cdn.jsdelivr.net/npm/toastify-js', 'toastifyPlugin')
 @antonio77xs
 @marcus.floriano.oliveira
 */
+
+// Função para clicar automaticamente no botão de próxima pergunta
+function autoNextQuestion() {
+    // Aguarda o elemento estar disponível no DOM
+    const checkElement = setInterval(() => {
+        // Procura pelo botão de próxima questão que não esteja desabilitado
+        const nextButton = document.querySelector('._1f0fvyce[aria-disabled="false"]');
+        
+        if (nextButton) {
+            // Botão encontrado e habilitado, realiza o clique
+            nextButton.click();
+            sendToast("⏭️ Próxima questão", 1000);
+            // Limpa o intervalo após encontrar e clicar
+            clearInterval(checkElement);
+        }
+    }, 1000); // Verifica a cada 1 segundo
+}
+
+// Executa a função quando a página carregar
+window.addEventListener('load', () => {
+    if(features.autoAnswer && features.questionSpoof) {
+        autoNextQuestion();
+    }
+});
