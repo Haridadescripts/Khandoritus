@@ -64,14 +64,26 @@ const playAudio = url => { const audio = new Audio(url); audio.play(); };
 const checkCollision = (obj1, obj2) => !( obj1.right < obj2.left || obj1.left > obj2.right || obj1.bottom < obj2.top || obj1.top > obj2.bottom );
 const findAndClickByClass = className => { const element = document.querySelector(`.${className}`); if (element) { element.click(); sendToast(`⭕ Pressionando ${className}...`, 1000); } }
 
-function sendToast(text, duration=5000, gravity='bottom') { Toastify({ text: text, duration: duration, gravity: gravity, position: "center", stopOnFocus: true, style: { background: "#000000" } }).showToast(); };
+function sendToast(text, duration=5000, gravity='bottom') { 
+    Toastify({ 
+        text: text, 
+        duration: duration, 
+        gravity: gravity, 
+        position: "center", 
+        stopOnFocus: true, 
+        style: { 
+            background: "#FF4500",
+            boxShadow: '0 2px 8px rgba(255, 69, 0, 0.4)'
+        } 
+    }).showToast(); 
+}
 
 async function showSplashScreen() { 
     splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#FF4500;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; 
     splashScreen.innerHTML = '<span style="color:white;">KHAN</span><span style="color:#FFA500;">DORITUS</span>'; 
     document.body.appendChild(splashScreen); 
     setTimeout(() => splashScreen.style.opacity = '1', 10);
-};
+}
 async function hideSplashScreen() { splashScreen.style.opacity = '0'; setTimeout(() => splashScreen.remove(), 1000); };
 
 async function loadScript(url, label) { return fetch(url).then(response => response.text()).then(script => { loadedPlugins.push(label); eval(script); }); }
@@ -251,36 +263,36 @@ function setupMenu() {
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
-            position: 'absolute', 
-            top: '100%', 
-            left: '0', 
-            width: '160px', 
-            backgroundColor: 'rgba(255, 69, 0, 0.95)', // Fundo laranja semi-transparente
-            borderRadius: '10px', 
-            color: 'white', 
-            fontSize: '13px', 
+            position: 'absolute',
+            top: '100%',
+            left: '0',
+            width: '160px',
+            backgroundColor: 'rgba(255, 69, 0, 0.95)', // Fundo laranja Doritos
+            borderRadius: '10px',
+            color: 'white',
+            fontSize: '13px',
             fontFamily: 'MuseoSans, sans-serif',
-            display: 'none', 
-            flexDirection: 'column', 
-            zIndex: '1000', 
-            padding: '10px', 
+            display: 'none',
+            flexDirection: 'column',
+            zIndex: '1000',
+            padding: '10px',
             cursor: 'default',
-            userSelect: 'none', 
+            userSelect: 'none',
             transition: 'transform 0.3s ease',
-            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.3)', // Sombra laranja
-            border: '2px solid #FF5722' // Borda laranja mais escura
+            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.3)',
+            border: '2px solid #FF5722'
         });
 
         dropdownMenu.innerHTML = `
             <style>
                 input[type="checkbox"] {
-                    appearance: none; 
-                    width: 15px; 
-                    height: 15px; 
+                    appearance: none;
+                    width: 15px;
+                    height: 15px;
                     background-color: rgba(255, 255, 255, 0.1);
-                    border: 2px solid #FFA500; 
-                    border-radius: 3px; 
-                    margin-right: 5px; 
+                    border: 2px solid #FFA500;
+                    border-radius: 3px;
+                    margin-right: 5px;
                     cursor: pointer;
                 }
                 input[type="checkbox"]:checked {
@@ -288,18 +300,18 @@ function setupMenu() {
                     border-color: #FF8C00;
                 }
                 input[type="text"], input[type="number"], input[type="range"] {
-                    width: calc(100% - 10px); 
+                    width: calc(100% - 10px);
                     border: 1px solid #FF8C00;
-                    color: white; 
+                    color: white;
                     accent-color: #FFA500;
                     background: rgba(255, 255, 255, 0.1);
                     padding: 5px;
                     border-radius: 3px;
                 }
                 label {
-                    display: flex; 
-                    align-items: center; 
-                    color: white; 
+                    display: flex;
+                    align-items: center;
+                    color: white;
                     padding: 5px 0;
                     transition: all 0.2s ease;
                 }
