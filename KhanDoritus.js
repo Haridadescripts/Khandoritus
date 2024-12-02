@@ -142,47 +142,114 @@ function setupMenu() {
         });
     }
     function setupWatermark() {
+        // Criar o botão de menu flutuante
+        const menuButton = document.createElement('menuButton');
+        Object.assign(menuButton.style, {
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            width: '50px',
+            height: '50px',
+            backgroundColor: '#FF4500',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+            zIndex: '1002',
+            transition: 'transform 0.3s ease'
+        });
+
+        // Adicionar ícone de menu
+        menuButton.innerHTML = `
+            <div style="width: 20px; height: 2px; background: white; position: relative;">
+                <div style="width: 20px; height: 2px; background: white; position: absolute; top: -6px;"></div>
+                <div style="width: 20px; height: 2px; background: white; position: absolute; top: 6px;"></div>
+            </div>
+        `;
+
+        document.body.appendChild(menuButton);
+
+        // Configurar o watermark (logo Doritos)
         Object.assign(watermark.style, {
             position: 'fixed', 
-            top: '0', 
-            left: '85%', 
-            width: '100px',
-            height: '60px',
-            backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA4QAAADICAYAAACzyNZ8AAAACXBIWXMAAAsTAAALEwEAmpwYAAAF4WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4yLWMwMDAgNzkuMWI2NWE3OWI0LCAyMDIyLzA2LzEzLTIyOjAxOjAxICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjQuMCAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjQtMDMtMTlUMTU6NDc6NDctMDM6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjQtMDMtMTlUMTU6NDc6NDctMDM6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI0LTAzLTE5VDE1OjQ3OjQ3LTAzOjAwIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjA1MGZmZjM5LThmOWEtNDFhNy05ZDJhLTk2MTgyODc4ZWI5YSIgeG1wTU06RG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjA1MGZmZjM5LThmOWEtNDFhNy05ZDJhLTk2MTgyODc4ZWI5YSIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjA1MGZmZjM5LThmOWEtNDFhNy05ZDJhLTk2MTgyODc4ZWI5YSIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjA1MGZmZjM5LThmOWEtNDFhNy05ZDJhLTk2MTgyODc4ZWI5YSIgc3RFdnQ6d2hlbj0iMjAyNC0wMy0xOVQxNTo0Nzo0Ny0wMzowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIDI0LjAgKE1hY2ludG9zaCkiLz4gPC9yZGY6U2VxPiA8L3htcE1NOkhpc3Rvcnk+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAAAsAAAAAA4ADgAAA4QYuyoGAA=="),
+            top: '20px', 
+            right: '20px', 
+            width: '120px',
+            height: '60px', 
+            backgroundImage: 'url("data:image/png;base64,YOUR_BASE64_IMAGE")', // Substitua pelo base64 da imagem do Doritos
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundColor: 'transparent',
-            cursor: 'pointer', 
             userSelect: 'none',
             zIndex: '1001',
-            transition: 'transform 0.3s ease'
+            transition: 'transform 0.3s ease',
+            display: 'none' // Inicialmente oculto
         });
         
-        if (device.mobile) watermark.style.left = '55%';
         document.body.appendChild(watermark);
-        
-        // Add hover effect
-        watermark.addEventListener('mouseenter', () => {
-            watermark.style.transform = 'scale(1.1)';
-        });
-        
-        watermark.addEventListener('mouseleave', () => {
-            watermark.style.transform = 'scale(1)';
+
+        // Adicionar eventos ao botão de menu
+        let menuOpen = false;
+        menuButton.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            watermark.style.display = menuOpen ? 'block' : 'none';
+            dropdownMenu.style.display = menuOpen ? 'flex' : 'none';
+            menuButton.style.transform = menuOpen ? 'rotate(90deg)' : 'rotate(0deg)';
+            playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav');
         });
 
-        let isDragging = false, offsetX, offsetY;
-        watermark.addEventListener('mousedown', e => { 
-            if (!dropdownMenu.contains(e.target)) { 
-                isDragging = true; 
-                offsetX = e.clientX - watermark.offsetLeft; 
-                offsetY = e.clientY - watermark.offsetTop; 
-                watermark.style.transform = 'scale(0.9)'; 
-                unloader.style.transform = 'scale(1)'; 
-            } 
+        // Efeito hover no botão
+        menuButton.addEventListener('mouseenter', () => {
+            menuButton.style.transform = 'scale(1.1)';
         });
-        watermark.addEventListener('mouseup', () => { isDragging = false; watermark.style.transform = 'scale(1)'; unloader.style.transform = 'scale(0)'; if (checkCollision(watermark.getBoundingClientRect(), unloader.getBoundingClientRect())) unload(); });
-        document.addEventListener('mousemove', e => { if (isDragging) { let newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - watermark.offsetWidth)); let newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - watermark.offsetHeight)); Object.assign(watermark.style, { left: `${newX}px`, top: `${newY}px` }); dropdownMenu.style.display = 'none'; } });
+
+        menuButton.addEventListener('mouseleave', () => {
+            if (!menuOpen) {
+                menuButton.style.transform = 'scale(1)';
+            }
+        });
+
+        // Permitir arrastar o botão
+        let isDragging = false, offsetX, offsetY;
+        menuButton.addEventListener('mousedown', e => {
+            isDragging = true;
+            offsetX = e.clientX - menuButton.offsetLeft;
+            offsetY = e.clientY - menuButton.offsetTop;
+            menuButton.style.transform = 'scale(0.95)';
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (isDragging) {
+                const newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - menuButton.offsetWidth));
+                const newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - menuButton.offsetHeight));
+                menuButton.style.left = `${newX}px`;
+                menuButton.style.top = `${newY}px`;
+                
+                // Mover o menu junto com o botão
+                if (menuOpen) {
+                    watermark.style.left = `${newX}px`;
+                    watermark.style.top = `${newY - watermark.offsetHeight}px`;
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            if (!menuOpen) {
+                menuButton.style.transform = 'scale(1)';
+            }
+        });
+
+        // Ajustar posição do menu dropdown
+        Object.assign(dropdownMenu.style, {
+            position: 'absolute',
+            top: '100%',
+            right: '0',
+            marginTop: '10px'
+        });
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
