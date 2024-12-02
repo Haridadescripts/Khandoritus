@@ -192,155 +192,21 @@ function setupMenu() {
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
-            position: 'absolute',
-            top: '100%',
-            left: '0',
-            width: '180px',
-            backgroundColor: 'rgba(255, 69, 0, 0.15)',
-            borderRadius: '12px',
-            color: 'white',
-            fontSize: '13px',
-            fontFamily: 'Arial, sans-serif',
-            display: 'none',
-            flexDirection: 'column',
-            zIndex: '1000',
-            padding: '10px',
-            cursor: 'default',
-            userSelect: 'none',
-            transition: 'none',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            border: '2px solid rgba(255, 69, 0, 0.3)',
-            pointerEvents: 'auto',
-            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.2)'
+            position: 'absolute', top: '100%', left: '0', width: '160px', backgroundColor: 'rgba(0,0,0,0.3)',
+            borderRadius: '10px', color: 'white', fontSize: '13px', fontFamily: 'Monospace, sans-serif',
+            display: 'none', flexDirection: 'column', zIndex: '1000', padding: '5px', cursor: 'default',
+            userSelect: 'none', transition: 'transform 0.3s ease', backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)'
         });
-
         dropdownMenu.innerHTML = `
             <style>
-                /* Estilo dos grupos de opções */
-                .option-group {
-                    margin-bottom: 8px;
-                    padding: 8px;
-                    border-radius: 8px;
-                    background: rgba(255, 69, 0, 0.1);
-                }
-
-                /* Estilo dos checkboxes */
-                input[type="checkbox"] {
-                    appearance: none;
-                    width: 40px;
-                    height: 20px;
-                    background-color: rgba(255, 255, 255, 0.2);
-                    border-radius: 20px;
-                    position: relative;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    border: none;
-                    margin-right: 8px;
-                }
-
-                input[type="checkbox"]::before {
-                    content: '';
-                    position: absolute;
-                    width: 16px;
-                    height: 16px;
-                    border-radius: 50%;
-                    top: 2px;
-                    left: 2px;
-                    background: white;
-                    transition: all 0.3s ease;
-                }
-
-                input[type="checkbox"]:checked {
-                    background-color: #FF4500;
-                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-                }
-
-                input[type="checkbox"]:checked::before {
-                    transform: translateX(20px);
-                }
-
-                /* Estilo dos inputs de texto */
-                input[type="text"], input[type="number"] {
-                    width: calc(100% - 16px);
-                    padding: 8px;
-                    border: 1px solid #FF4500;
-                    border-radius: 6px;
-                    background: rgba(255, 69, 0, 0.1);
-                    color: white;
-                    font-size: 12px;
-                    transition: all 0.3s ease;
-                    margin-top: 4px;
-                }
-
-                input[type="text"]:focus, input[type="number"]:focus {
-                    border-color: #FF4500;
-                    outline: none;
-                    box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.3);
-                }
-
-                /* Estilo do slider */
-                input[type="range"] {
-                    -webkit-appearance: none;
-                    width: 100%;
-                    height: 4px;
-                    background: rgba(255, 255, 255, 0.2);
-                    border-radius: 2px;
-                    margin: 10px 0;
-                }
-
-                input[type="range"]::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    width: 16px;
-                    height: 16px;
-                    background: #FFD700; /* Amarelo para o slider */
-                    border-radius: 50%;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-                }
-
-                input[type="range"]::-webkit-slider-thumb:hover {
-                    transform: scale(1.1);
-                    background: #FFC000;
-                }
-
-                /* Estilo das labels */
-                label {
-                    display: flex;
-                    align-items: center;
-                    color: rgba(255, 255, 255, 0.9);
-                    padding: 6px 0;
-                    font-size: 12px;
-                    font-weight: 500;
-                    transition: all 0.3s ease;
-                }
-
-                label:hover {
-                    color: #FF4500;
-                }
-
-                /* Estilo dos títulos das seções */
-                .section-title {
-                    color: #FF4500;
-                    font-size: 11px;
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                    margin-bottom: 6px;
-                    font-weight: bold;
-                    text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
-                }
-
-                /* Divisor entre seções */
-                .divider {
-                    height: 1px;
-                    background: rgba(255, 69, 0, 0.3);
-                    margin: 8px 0;
-                    box-shadow: 0 0 5px rgba(255, 69, 0, 0.2);
-                }
+                input[type="checkbox"] {appearance: none; width: 15px; height: 15px; background-color: #3a3a3b;
+                border: 1px solid #acacac; border-radius: 3px; margin-right: 5px; cursor: pointer;}
+                input[type="checkbox"]:checked {background-color: #540b8a; border-color: #720fb8;}
+                input[type="text"], input[type="number"], input[type="range"] {width: calc(100% - 10px); border: 1px solid #343434; 
+                color: white; accent-color: #540b8a; background-color: #540b8a; padding: 3px; border-radius: 3px; background: none;}
+                label {display: flex; align-items: center; color: #3a3a3b; padding-top: 3px;}
             </style>
         `;
-        
         watermark.appendChild(dropdownMenu);
         let featuresList = [
             [{ name: 'questionSpoof', type: 'checkbox', variable: 'features.questionSpoof', attributes: 'checked', labeled: true, label: 'Question Spoof' },
