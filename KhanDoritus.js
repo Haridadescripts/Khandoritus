@@ -302,7 +302,7 @@ function setupMain(){
                             }
                         };
                         responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                        sendToast("���� Questão modificada", 1000);
+                        sendToast(" Questão modificada", 1000);
                         return new Response(JSON.stringify(responseObj), { 
                             status: originalResponse.status, 
                             statusText: originalResponse.statusText, 
@@ -424,22 +424,32 @@ function setupMain(){
         }, 3000);
     }
     async function autoAnswer() {
-        const targetButtonClass = "_1f0fvyce";
+        const correctAnswerSelector = 'div[data-test-correct="true"]';
+        const verifyButtonSelector = 'button.verify-button-class'; // Substitua pela classe correta do botão "Verificar"
+        const nextButtonSelector = 'button._1f0fvyce[aria-disabled="false"]';
         
         while (true) {
             if(features.autoAnswer && features.questionSpoof) {
-                // Primeiro clica na resposta correta
-                const correctAnswer = document.querySelector('div[data-test-correct="true"]');
+                // Clica na resposta correta
+                const correctAnswer = document.querySelector(correctAnswerSelector);
                 if(correctAnswer) {
                     correctAnswer.click();
                     sendToast("✅ Resposta correta selecionada", 1000);
                     await delay(500);
                 }
 
-                // Depois clica no botão de próximo
-                const targetButton = document.querySelector(`.${targetButtonClass}[aria-disabled="false"]`);
-                if(targetButton) {
-                    targetButton.click();
+                // Clica no botão "Verificar"
+                const verifyButton = document.querySelector(verifyButtonSelector);
+                if(verifyButton) {
+                    verifyButton.click();
+                    sendToast("🔍 Verificando resposta", 1000);
+                    await delay(500);
+                }
+
+                // Clica no botão "Próxima"
+                const nextButton = document.querySelector(nextButtonSelector);
+                if(nextButton) {
+                    nextButton.click();
                     sendToast("⏭️ Próxima questão", 1000);
                     await delay(500);
                 }
