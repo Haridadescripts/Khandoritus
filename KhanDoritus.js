@@ -33,7 +33,8 @@ window.features = {
     nextRecomendation: false,
     repeatQuestion: false,
     minuteFarmer: false,
-    rgbLogo: false
+    rgbLogo: false,
+    showActivities: false
 };
 window.featureConfigs = {
     autoAnswerDelay: 3,
@@ -335,7 +336,8 @@ function setupMenu() {
             { name: 'customBanner', type: 'checkbox', variable: 'features.customBanner', labeled: true, label: 'Custom Banner' },
             { name: 'rgbLogo', type: 'checkbox', variable: 'features.rgbLogo', labeled: true, label: 'RGB Logo' }],
             [{ name: 'darkMode', type: 'checkbox', variable: 'features.darkMode', attributes: 'checked', labeled: true, label: 'Dark Mode' },
-            { name: 'onekoJs', type: 'checkbox', variable: 'features.onekoJs', labeled: true, label: 'onekoJs' }]
+            { name: 'onekoJs', type: 'checkbox', variable: 'features.onekoJs', labeled: true, label: 'onekoJs' }],
+            [{ name: 'showActivities', type: 'checkbox', variable: 'features.showActivities', labeled: true, label: 'Mostrar Atividades' }]
         ]
         if (!device.apple) {
             featuresList.push(
@@ -361,6 +363,11 @@ function setupMenu() {
             }
         });
         handleInput('onekoJs', checked => { onekoEl = document.getElementById('oneko'); if (onekoEl) {onekoEl.style.display = checked ? null : "none"} });
+        handleInput('showActivities', checked => {
+            if (checked) {
+                showCompletedActivities();
+            }
+        });
         watermark.addEventListener('mouseenter', () => { dropdownMenu.style.display = 'flex'; playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav'); } );
         watermark.addEventListener('mouseleave', e => { !watermark.contains(e.relatedTarget) && (dropdownMenu.style.display = 'none'); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/rqizlm03.wav'); });
     }
@@ -553,6 +560,119 @@ function setupMain(){
                 });
             }
             await delay(featureConfigs.autoAnswerDelay*750);
+        }
+    }
+    async function showCompletedActivities() {
+        const activityPanel = document.createElement('div');
+        Object.assign(activityPanel.style, {
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '80%',
+            maxWidth: '600px',
+            maxHeight: '80vh',
+            backgroundColor: 'rgba(255, 69, 0, 0.95)',
+            borderRadius: '10px',
+            padding: '20px',
+            color: 'white',
+            fontFamily: 'MuseoSans, sans-serif',
+            zIndex: '9999',
+            overflowY: 'auto',
+            boxShadow: '0 4px 15px rgba(255, 69, 0, 0.3)',
+            border: '2px solid #FF5722'
+        });
+
+        // Adicionar botão de fechar
+        const closeButton = document.createElement('button');
+        Object.assign(closeButton.style, {
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            fontSize: '20px',
+            cursor: 'pointer'
+        });
+        closeButton.innerHTML = '✕';
+        closeButton.onclick = () => activityPanel.remove();
+
+        // Adicionar título
+        const title = document.createElement('h2');
+        title.textContent = 'Atividades Concluídas';
+        title.style.marginBottom = '20px';
+        title.style.textAlign = 'center';
+
+        activityPanel.appendChild(closeButton);
+        activityPanel.appendChild(title);
+
+        try {
+            // Mostrar loading
+            const loading = document.createElement('div');
+            loading.textContent = 'Carregando atividades...';
+            loading.style.textAlign = 'center';
+            activityPanel.appendChild(loading);
+            document.body.appendChild(activityPanel);
+
+            // Fazer requisição para a API do Khan Academy
+            const response = await fetch('https://www.khanacademy.org/api/v1/user/exercises/progress');
+            const activities = await response.json();
+
+            // Remover loading
+            loading.remove();
+
+            // Criar container para as atividades
+            const activitiesContainer = document.createElement('div');
+            Object.assign(activitiesContainer.style, {
+                display: 'grid',
+                gap: '10px'
+            });
+
+            // Ordenar atividades por data
+            activities.sort((a, b) => new Date(b.lastAttemptDate) - new Date(a.lastAttemptDate));
+
+            // Mostrar cada atividade
+            activities.forEach(activity => {
+                if (activity.totalDone > 0) {
+                    const activityItem = document.createElement('div');
+                    Object.assign(activityItem.style, {
+                        padding: '10px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: '5px',
+                        transition: 'all 0.2s ease'
+                    });
+
+                    const date = new Date(activity.lastAttemptDate).toLocaleDateString();
+                    activityItem.innerHTML = `
+                        <div style="font-weight: bold;">${activity.exerciseName}</div>
+                        <div style="font-size: 0.9em; color: #FFA500;">
+                            Concluído em: ${date}<br>
+                            Questões respondidas: ${activity.totalDone}<br>
+                            Pontuação: ${activity.points || 0} pontos
+                        </div>
+                    `;
+
+                    activityItem.onmouseover = () => {
+                        activityItem.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                    };
+                    activityItem.onmouseout = () => {
+                        activityItem.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    };
+
+                    activitiesContainer.appendChild(activityItem);
+                }
+            });
+
+            activityPanel.appendChild(activitiesContainer);
+
+        } catch (error) {
+            activityPanel.innerHTML = `
+                <div style="text-align: center; color: #FFA500;">
+                    Erro ao carregar atividades.<br>
+                    Certifique-se de estar logado no Khan Academy.
+                </div>
+            `;
         }
     }
     spoofQuestion(); spoofVideo(); answerRevealer(); minuteFarm(); spoofUser(); rgbLogo(); changeBannerText(); autoAnswer();
