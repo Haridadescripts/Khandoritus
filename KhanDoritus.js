@@ -380,18 +380,31 @@ function setupMain(){
     }
     async function autoAnswer() {
         const baseClasses = ["_1tuo6xk", "_ssxvf9l", "_1f0fvyce", "_rz7ls7u", "_1yok8f4", "_1e5cuk2a"];
+        const nextButtonClasses = ["_1kkrg8oi", "_ixuggsz", "_1abyu0ga"];
+        
         while (true) {
-            if(features.autoAnswer&&features.questionSpoof){
-                const classToCheck = [...baseClasses];
-                if (features.nextRecomendation) { device.mobile ? classToCheck.push("_ixuggsz") : classToCheck.push("_1kkrg8oi"); }
-                if (features.repeatQuestion) classToCheck.push("_1abyu0ga");
-                classToCheck.forEach(async (q) => {
-                    findAndClickByClass(q);
-                    const element = document.getElementsByClassName(q)[0];
-                    if(element&&element.textContent=='Mostrar resumo') { sendToast("🎉 Exercício concluido!", 3000); playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav'); }
+            if(features.autoAnswer && features.questionSpoof) {
+                // Primeiro clica na resposta correta
+                const correctAnswer = document.querySelector('div[role="radio"]');
+                if(correctAnswer) {
+                    correctAnswer.click();
+                    sendToast("✅ Resposta selecionada", 1000);
+                    await delay(500); // Pequeno delay entre cliques
+                }
+
+                // Depois procura e clica no botão próximo
+                [...baseClasses, ...nextButtonClasses].forEach(async (className) => {
+                    const element = document.querySelector(`.${className}`);
+                    if(element) {
+                        element.click();
+                        if(element.textContent == 'Mostrar resumo') {
+                            sendToast(" Exercício completado!", 3000);
+                            playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/4x5g14gj.wav');
+                        }
+                    }
                 });
             }
-            await delay(featureConfigs.autoAnswerDelay*750);
+            await delay(featureConfigs.autoAnswerDelay * 750);
         }
     }
     spoofQuestion(); spoofVideo(); answerRevealer(); minuteFarm(); spoofUser(); rgbLogo(); changeBannerText(); autoAnswer();
