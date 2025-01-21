@@ -155,15 +155,15 @@ function setupMenu() {
         });
     }
     function setupWatermark() {
-        // Criar o botão de menu flutuante
+        // Create the menu button
         const menuButton = document.createElement('menuButton');
         Object.assign(menuButton.style, {
             position: 'fixed',
             bottom: '20px',
             right: '20px',
-            width: '60px',
-            height: '60px',
-            backgroundImage: 'url("data:image/png;base64,YOUR_DORITOS_LOGO_BASE64")', // Substituir pelo base64 do logo Doritos
+            width: '50px',
+            height: '50px',
+            backgroundImage: 'url("data:image/png;base64,YOUR_DORITOS_LOGO_BASE64")',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
@@ -175,23 +175,50 @@ function setupMenu() {
             transition: 'all 0.3s ease'
         });
 
-        document.body.appendChild(menuButton);
+        // Create the Discord button
+        const discordButton = document.createElement('discordButton');
+        Object.assign(discordButton.style, {
+            position: 'fixed',
+            bottom: '20px',
+            right: '90px', // Position it to the left of the menu button
+            width: '50px',
+            height: '50px',
+            backgroundImage: 'url("https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png")',
+            backgroundSize: '60%',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundColor: '#5865F2',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            boxShadow: '0 2px 5px rgba(88, 101, 242, 0.4)',
+            zIndex: '1002',
+            transition: 'all 0.3s ease'
+        });
 
-        // Configurar o menu dropdown
+        document.body.appendChild(menuButton);
+        document.body.appendChild(discordButton);
+
+        // Configure the dropdown menu
         Object.assign(dropdownMenu.style, {
-            position: 'absolute',
+            position: 'fixed',
             top: 'auto',
-            bottom: '70px',
+            bottom: '80px',
             right: '20px',
-            width: '200px',
+            width: '250px',
             backgroundColor: 'rgba(255, 69, 0, 0.95)',
-            display: 'none'
-            // ... resto dos estilos do menu permanecem iguais
+            borderRadius: '10px',
+            padding: '10px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            display: 'none',
+            flexDirection: 'column',
+            gap: '8px',
+            zIndex: '1001',
+            transition: 'all 0.3s ease'
         });
 
         document.body.appendChild(dropdownMenu);
 
-        // Adicionar eventos ao botão
+        // Menu button events
         let menuOpen = false;
         menuButton.addEventListener('click', () => {
             menuOpen = !menuOpen;
@@ -200,7 +227,13 @@ function setupMenu() {
             playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav');
         });
 
-        // Efeitos hover
+        // Discord button events
+        discordButton.addEventListener('click', () => {
+            window.open('https://discord.gg/your-discord-invite', '_blank');
+            playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav');
+        });
+
+        // Hover effects
         menuButton.addEventListener('mouseenter', () => {
             menuButton.style.transform = menuOpen ? 'rotate(180deg) scale(1.1)' : 'scale(1.1)';
             menuButton.style.backgroundColor = '#FF5722';
@@ -211,7 +244,17 @@ function setupMenu() {
             menuButton.style.backgroundColor = '#FF4500';
         });
 
-        // Fechar menu ao clicar fora
+        discordButton.addEventListener('mouseenter', () => {
+            discordButton.style.transform = 'scale(1.1)';
+            discordButton.style.backgroundColor = '#4752C4';
+        });
+
+        discordButton.addEventListener('mouseleave', () => {
+            discordButton.style.transform = 'scale(1)';
+            discordButton.style.backgroundColor = '#5865F2';
+        });
+
+        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target) && menuOpen) {
                 menuOpen = false;
@@ -221,29 +264,36 @@ function setupMenu() {
             }
         });
 
-        // Permitir arrastar o botão
+        // Make both buttons draggable
+        function makeDraggable(element, companion = null) {
         let isDragging = false, offsetX, offsetY;
-        menuButton.addEventListener('mousedown', e => {
-            if (e.button === 0) { // Apenas botão esquerdo do mouse
+            
+            element.addEventListener('mousedown', e => {
+                if (e.button === 0) {
                 isDragging = true;
-                offsetX = e.clientX - menuButton.offsetLeft;
-                offsetY = e.clientY - menuButton.offsetTop;
-                menuButton.style.transition = 'none';
+                    offsetX = e.clientX - element.offsetLeft;
+                    offsetY = e.clientY - element.offsetTop;
+                    element.style.transition = 'none';
+                    if (companion) companion.style.transition = 'none';
             }
         });
 
         document.addEventListener('mousemove', e => {
             if (isDragging) {
-                const newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - menuButton.offsetWidth));
-                const newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - menuButton.offsetHeight));
-                
-                menuButton.style.left = `${newX}px`;
-                menuButton.style.top = `${newY}px`;
-                
-                // Mover o menu junto com o botão
-                if (menuOpen) {
+                    const newX = Math.max(0, Math.min(e.clientX - offsetX, window.innerWidth - element.offsetWidth));
+                    const newY = Math.max(0, Math.min(e.clientY - offsetY, window.innerHeight - element.offsetHeight));
+                    
+                    element.style.left = `${newX}px`;
+                    element.style.top = `${newY}px`;
+                    
+                    if (companion) {
+                        companion.style.left = `${newX - 70}px`;
+                        companion.style.top = `${newY}px`;
+                    }
+                    
+                    if (menuOpen && element === menuButton) {
                     dropdownMenu.style.left = `${newX}px`;
-                    dropdownMenu.style.top = `${newY + menuButton.offsetHeight + 10}px`;
+                        dropdownMenu.style.top = `${newY - dropdownMenu.offsetHeight - 10}px`;
                 }
             }
         });
@@ -251,12 +301,13 @@ function setupMenu() {
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
-                menuButton.style.transition = 'all 0.3s ease';
+                    element.style.transition = 'all 0.3s ease';
+                    if (companion) companion.style.transition = 'all 0.3s ease';
             }
         });
+        }
 
-        // Remover eventos antigos do watermark já que agora usamos o botão
-        watermark.remove();
+        makeDraggable(menuButton, discordButton);
     }
     function setupDropdown() {
         Object.assign(dropdownMenu.style, {
@@ -536,7 +587,7 @@ function setupMain(){
         })
     }
     function changeBannerText() {
-        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[🌿] Get good get Khanware!", "[🌿] the old khanware.space" ];
+        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[��] Get good get Khanware!", "[🌿] the old khanware.space" ];
         setInterval(() => { 
             const greeting = document.querySelector('.stp-animated-banner h2');
             if (greeting&&features.customBanner) greeting.textContent = phrases[Math.floor(Math.random() * phrases.length)];
