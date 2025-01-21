@@ -159,8 +159,8 @@ function setupMenu() {
         const menuButton = document.createElement('menuButton');
         Object.assign(menuButton.style, {
             position: 'fixed',
-            bottom: '20px',
-            right: '20px',
+            top: '20px',
+            left: '20px',
             width: '50px',
             height: '50px',
             backgroundImage: 'url("data:image/png;base64,YOUR_DORITOS_LOGO_BASE64")',
@@ -180,7 +180,7 @@ function setupMenu() {
         Object.assign(discordButton.style, {
             position: 'fixed',
             bottom: '20px',
-            right: '90px', // Position it to the left of the menu button
+            right: '20px',
             width: '50px',
             height: '50px',
             backgroundImage: 'url("https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png")',
@@ -201,20 +201,41 @@ function setupMenu() {
         // Configure the dropdown menu
         Object.assign(dropdownMenu.style, {
             position: 'fixed',
-            top: 'auto',
-            bottom: '80px',
-            right: '20px',
+            top: '80px',
+            left: '20px',
             width: '250px',
             backgroundColor: 'rgba(255, 69, 0, 0.95)',
             borderRadius: '10px',
-            padding: '10px',
+            padding: '15px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             display: 'none',
             flexDirection: 'column',
-            gap: '8px',
+            gap: '10px',
             zIndex: '1001',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            maxHeight: 'calc(100vh - 120px)',
+            overflowY: 'auto'
         });
+
+        // Add custom scrollbar styles for the dropdown menu
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+            dropDownMenu::-webkit-scrollbar {
+                width: 8px;
+            }
+            dropDownMenu::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+            }
+            dropDownMenu::-webkit-scrollbar-thumb {
+                background: #FF5722;
+                border-radius: 4px;
+            }
+            dropDownMenu::-webkit-scrollbar-thumb:hover {
+                background: #FF7043;
+            }
+        `;
+        document.head.appendChild(styleElement);
 
         document.body.appendChild(dropdownMenu);
 
@@ -587,7 +608,7 @@ function setupMain(){
         })
     }
     function changeBannerText() {
-        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[��] Get good get Khanware!", "[🌿] the old khanware.space" ];
+        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[🌿] Get good get Khanware!", "[🌿] the old khanware.space" ];
         setInterval(() => { 
             const greeting = document.querySelector('.stp-animated-banner h2');
             if (greeting&&features.customBanner) greeting.textContent = phrases[Math.floor(Math.random() * phrases.length)];
